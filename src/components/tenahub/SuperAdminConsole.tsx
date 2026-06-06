@@ -196,7 +196,7 @@ export function SuperAdminConsole() {
       )}
 
       {/* Sidebar Navigation */}
-      <aside className="w-full md:w-64 shrink-0 bg-card border border-border p-4 h-fit rounded-3xl flex flex-row overflow-x-auto gap-2 md:flex-col md:gap-0 md:space-y-1 scrollbar-hide">
+      <aside className="w-full md:w-64 shrink-0 bg-card border border-border p-4 h-fit rounded-3xl flex flex-row overflow-x-auto gap-2 md:flex-col md:gap-0 md:space-y-1 scrollbar-hide md:sticky md:top-24">
         <div className="px-3 py-2 mb-2 hidden md:flex items-center gap-2 shrink-0">
           <Shield className="h-5 w-5 text-primary" />
           <span className="font-bold text-lg tracking-tight">Super Admin</span>
