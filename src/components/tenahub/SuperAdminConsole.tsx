@@ -39,7 +39,9 @@ const incidents = [
 
 const sparkline = [22, 30, 28, 41, 38, 52, 47, 60, 58, 71, 68, 80];
 
-type AdminTab = "dashboard" | "users" | "organizers" | "professionals" | "miniapps" | "submissions" | "analytics" | "reports" | "database" | "settings";
+import { Globe2 } from "lucide-react";
+
+type AdminTab = "dashboard" | "users" | "organizers" | "professionals" | "miniapps" | "submissions" | "analytics" | "reports" | "database" | "translations" | "settings";
 
 export function SuperAdminConsole() {
   const [activeTab, setActiveTab] = useState<AdminTab>("dashboard");
@@ -192,12 +194,12 @@ export function SuperAdminConsole() {
       )}
 
       {/* Sidebar Navigation */}
-      <aside className="w-full md:w-64 shrink-0 bg-card border border-border p-4 space-y-1 h-fit rounded-3xl">
-        <div className="px-3 py-2 mb-2 flex items-center gap-2">
+      <aside className="w-full md:w-64 shrink-0 bg-card border border-border p-4 h-fit rounded-3xl flex flex-row overflow-x-auto gap-2 md:flex-col md:gap-0 md:space-y-1 scrollbar-hide">
+        <div className="px-3 py-2 mb-2 hidden md:flex items-center gap-2 shrink-0">
           <Shield className="h-5 w-5 text-primary" />
           <span className="font-bold text-lg tracking-tight">Super Admin</span>
         </div>
-        <div className="h-px bg-border my-2 mx-3"></div>
+        <div className="h-px bg-border my-2 mx-3 hidden md:block"></div>
         <NavButton active={activeTab === "dashboard"} onClick={() => setActiveTab("dashboard")} icon={LayoutDashboard} label="Dashboard" />
         <NavButton active={activeTab === "users"} onClick={() => setActiveTab("users")} icon={Users} label="Users" />
         <NavButton active={activeTab === "organizers"} onClick={() => setActiveTab("organizers")} icon={Building2} label="Listed Businesses" />
@@ -207,6 +209,7 @@ export function SuperAdminConsole() {
         <NavButton active={activeTab === "analytics"} onClick={() => setActiveTab("analytics")} icon={PieChart} label="Analytics" />
         <NavButton active={activeTab === "reports"} onClick={() => setActiveTab("reports")} icon={FileText} label="Reports" />
         <NavButton active={activeTab === "database"} onClick={() => setActiveTab("database")} icon={Database} label="Database" />
+        <NavButton active={activeTab === "translations"} onClick={() => setActiveTab("translations")} icon={Globe2} label="Translations" />
         <NavButton active={activeTab === "settings"} onClick={() => setActiveTab("settings")} icon={Settings} label="Settings" />
       </aside>
 
@@ -217,10 +220,10 @@ export function SuperAdminConsole() {
         {activeTab === "dashboard" && (
           <div className="space-y-6 animate-in fade-in slide-in-from-bottom-2 duration-300">
             <section className="grid grid-cols-2 gap-4 sm:grid-cols-4">
-              <KPI Icon={Users} label="Total Users" value="48.2k" trend="+9.2%" />
-              <KPI Icon={Building2} label="Listed Orgs" value="36" trend="+2" />
-              <KPI Icon={User} label="Professionals" value="142" trend="+12" />
-              <KPI Icon={Activity} label="API Health" value="99.97%" trend="stable" />
+              <KPI Icon={Users} label="Total Users" value={String(allUsersList.length)} trend="+1 Today" />
+              <KPI Icon={Building2} label="Listed Orgs" value={String(partners.length)} trend="+0 Today" />
+              <KPI Icon={User} label="Professionals" value={String(initialProfessionals.length)} trend="+2 This Week" />
+              <KPI Icon={Layers} label="Mini Apps" value={String(marketplace.length)} trend="+1 New" />
             </section>
 
             <div className="grid gap-6 lg:grid-cols-2">
@@ -383,25 +386,25 @@ export function SuperAdminConsole() {
                 </div>
               </div>
 
-              <div className="grid gap-4 sm:grid-cols-2">
+              <div className="flex flex-col space-y-3">
                 {allUsersList.map((u) => (
                   <div 
                     key={u.id} 
                     onClick={() => setModalData({ title: "User Profile Overview", data: u })}
-                    className="group flex flex-col rounded-2xl border border-border bg-background p-4 shadow-sm transition hover:shadow-md cursor-pointer hover:border-primary/50"
+                    className="group flex items-center justify-between rounded-2xl border border-border bg-background p-4 shadow-sm transition hover:shadow-md cursor-pointer hover:border-primary/50"
                   >
                     <div className="flex items-center gap-4">
-                      <div className="flex h-12 w-12 items-center justify-center rounded-full bg-primary/10 text-primary font-bold">
+                      <div className="flex h-12 w-12 items-center justify-center rounded-full bg-primary/10 text-primary font-bold shrink-0">
                         {u.name.charAt(0)}{u.name.split(" ")[1]?.charAt(0) || u.name.charAt(1)}
                       </div>
-                      <div className="flex-1">
+                      <div>
                         <div className="font-semibold text-base">{u.name}</div>
                         <div className="text-sm text-muted-foreground">{u.email}</div>
                       </div>
-                      <div className="text-right">
-                        <div className="text-xs font-medium bg-secondary text-secondary-foreground px-2 py-1 rounded-md">{u.role}</div>
-                        <div className="text-[10px] text-muted-foreground mt-1 uppercase">{u.joined}</div>
-                      </div>
+                    </div>
+                    <div className="text-right hidden sm:block">
+                      <div className="text-xs font-medium bg-secondary text-secondary-foreground px-2 py-1 rounded-md inline-block">{u.role}</div>
+                      <div className="text-[10px] text-muted-foreground mt-2 uppercase">Joined {u.joined}</div>
                     </div>
                   </div>
                 ))}
@@ -663,78 +666,133 @@ export function SuperAdminConsole() {
           </div>
         )}
 
+        {/* TRANSLATIONS TAB */}
+        {activeTab === "translations" && (
+          <div className="space-y-6 animate-in fade-in slide-in-from-bottom-2 duration-300">
+            <section className="rounded-3xl bg-card border border-border p-6">
+              <div className="flex justify-between items-center mb-6">
+                <div>
+                  <h2 className="text-xl font-bold">Localization & Translations</h2>
+                  <p className="text-sm text-muted-foreground">Manage Amharic (አማርኛ) and English string translations.</p>
+                </div>
+                <Button onClick={() => toast.success("Translations saved and published.")}>Publish Translations</Button>
+              </div>
+
+              <div className="rounded-2xl border border-border overflow-hidden">
+                <table className="w-full text-sm text-left">
+                  <thead className="bg-muted/50 text-xs uppercase tracking-wide text-muted-foreground">
+                    <tr>
+                      <th className="px-4 py-3">Key (Component)</th>
+                      <th className="px-4 py-3">English (Default)</th>
+                      <th className="px-4 py-3">Amharic (አማርኛ)</th>
+                    </tr>
+                  </thead>
+                  <tbody className="divide-y divide-border">
+                    <tr className="bg-background">
+                      <td className="px-4 py-3 font-mono text-xs text-muted-foreground">nav.dashboard</td>
+                      <td className="px-4 py-3"><Input defaultValue="Dashboard" className="h-8" /></td>
+                      <td className="px-4 py-3"><Input defaultValue="ዳሽቦርድ" className="h-8" /></td>
+                    </tr>
+                    <tr className="bg-background">
+                      <td className="px-4 py-3 font-mono text-xs text-muted-foreground">nav.appointments</td>
+                      <td className="px-4 py-3"><Input defaultValue="Appointments" className="h-8" /></td>
+                      <td className="px-4 py-3"><Input defaultValue="ቀጠሮዎች" className="h-8" /></td>
+                    </tr>
+                    <tr className="bg-background">
+                      <td className="px-4 py-3 font-mono text-xs text-muted-foreground">hero.title</td>
+                      <td className="px-4 py-3"><Input defaultValue="HEALTH MANAGEMENT" className="h-8" /></td>
+                      <td className="px-4 py-3"><Input defaultValue="የጤና አያያዝ" className="h-8" /></td>
+                    </tr>
+                    <tr className="bg-background">
+                      <td className="px-4 py-3 font-mono text-xs text-muted-foreground">button.login</td>
+                      <td className="px-4 py-3"><Input defaultValue="Log In" className="h-8" /></td>
+                      <td className="px-4 py-3"><Input defaultValue="ግባ" className="h-8" /></td>
+                    </tr>
+                    <tr className="bg-background">
+                      <td className="px-4 py-3 font-mono text-xs text-muted-foreground">button.signup</td>
+                      <td className="px-4 py-3"><Input defaultValue="Sign Up" className="h-8" /></td>
+                      <td className="px-4 py-3"><Input defaultValue="ተመዝገብ" className="h-8" /></td>
+                    </tr>
+                  </tbody>
+                </table>
+              </div>
+            </section>
+          </div>
+        )}
+
         {/* SETTINGS TAB */}
         {activeTab === "settings" && (
           <div className="space-y-6 animate-in fade-in slide-in-from-bottom-2 duration-300">
-            <section className="rounded-3xl bg-card border border-border p-6">
-              <h2 className="text-xl font-bold mb-6">Platform Settings & Customization</h2>
-              
-              <div className="grid md:grid-cols-2 gap-8">
+            <h2 className="text-2xl font-bold tracking-tight mb-2">Platform Settings</h2>
+            
+            <div className="grid lg:grid-cols-2 gap-6">
+              <section className="rounded-3xl bg-card border border-border p-6 hover:border-primary/50 transition">
+                <h3 className="font-bold text-lg mb-4 flex items-center gap-2"><Settings className="h-5 w-5 text-primary" /> General Configuration</h3>
                 <div className="space-y-4">
-                  <h3 className="font-semibold text-lg border-b border-border pb-2">General Info</h3>
                   <div>
-                    <label className="text-sm font-medium">Platform Name</label>
+                    <label className="text-sm font-medium text-muted-foreground">Platform Name</label>
                     <Input defaultValue="TenaGulecha" className="mt-1" />
                   </div>
                   <div>
-                    <label className="text-sm font-medium">Support Email</label>
+                    <label className="text-sm font-medium text-muted-foreground">Support Email</label>
                     <Input defaultValue="support@tenagulecha.com" className="mt-1" />
                   </div>
                   <div>
-                    <label className="text-sm font-medium">Default Language</label>
-                    <select className="w-full rounded-md border border-input bg-background px-3 py-2 text-sm mt-1">
+                    <label className="text-sm font-medium text-muted-foreground">Default Language</label>
+                    <select className="w-full rounded-md border border-input bg-background px-3 py-2.5 text-sm mt-1">
                       <option>English</option>
                       <option>Amharic</option>
                     </select>
                   </div>
                 </div>
+              </section>
 
+              <section className="rounded-3xl bg-card border border-border p-6 hover:border-primary/50 transition">
+                <h3 className="font-bold text-lg mb-4 flex items-center gap-2"><Globe className="h-5 w-5 text-primary" /> Landing Page Content</h3>
                 <div className="space-y-4">
-                  <h3 className="font-semibold text-lg border-b border-border pb-2">Landing Page Settings</h3>
                   <div>
-                    <label className="text-sm font-medium">Hero Title</label>
+                    <label className="text-sm font-medium text-muted-foreground">Hero Title</label>
                     <Input defaultValue="HEALTH MANAGEMENT, MADE TRANSPARENT." className="mt-1" />
                   </div>
                   <div>
-                    <label className="text-sm font-medium">Hero Subtitle</label>
+                    <label className="text-sm font-medium text-muted-foreground">Hero Subtitle</label>
                     <textarea 
                       className="w-full rounded-md border border-input bg-background px-3 py-2 text-sm mt-1 resize-none"
-                      rows={3}
+                      rows={4}
                       defaultValue="TenaGulecha acts as an operating system for your health journey. Whether you are an individual tracking wellness goals or an organizer running a clinic, our transparent ecosystem brings everything together seamlessly."
                     />
                   </div>
-                  <div className="flex gap-4">
-                    <div className="flex-1">
-                      <label className="text-sm font-medium">Theme Color Settings</label>
-                      <div className="space-y-3 mt-2">
-                        <div className="flex items-center justify-between gap-4">
-                          <span className="text-xs font-medium w-24">Primary</span>
-                          <input type="color" defaultValue="#3b82f6" className="h-8 w-16 p-0 border-0 rounded cursor-pointer" onChange={(e) => document.documentElement.style.setProperty('--primary', e.target.value)} />
-                        </div>
-                        <div className="flex items-center justify-between gap-4">
-                          <span className="text-xs font-medium w-24">Background</span>
-                          <input type="color" defaultValue="#020817" className="h-8 w-16 p-0 border-0 rounded cursor-pointer" onChange={(e) => document.documentElement.style.setProperty('--background', e.target.value)} />
-                        </div>
-                        <div className="flex items-center justify-between gap-4">
-                          <span className="text-xs font-medium w-24">Card</span>
-                          <input type="color" defaultValue="#0f172a" className="h-8 w-16 p-0 border-0 rounded cursor-pointer" onChange={(e) => document.documentElement.style.setProperty('--card', e.target.value)} />
-                        </div>
-                        <div className="flex items-center justify-between gap-4">
-                          <span className="text-xs font-medium w-24">Foreground</span>
-                          <input type="color" defaultValue="#f8fafc" className="h-8 w-16 p-0 border-0 rounded cursor-pointer" onChange={(e) => document.documentElement.style.setProperty('--foreground', e.target.value)} />
-                        </div>
-                      </div>
-                      <p className="text-[10px] text-muted-foreground mt-2">Changes apply immediately via CSS variables.</p>
-                    </div>
+                </div>
+              </section>
+
+              <section className="rounded-3xl bg-card border border-border p-6 lg:col-span-2 hover:border-primary/50 transition">
+                <h3 className="font-bold text-lg mb-4 flex items-center gap-2"><Layers className="h-5 w-5 text-primary" /> Global Theme Colors</h3>
+                <div className="grid grid-cols-2 md:grid-cols-4 gap-6">
+                  <div className="p-4 rounded-2xl bg-background border border-border flex flex-col items-center justify-center gap-3">
+                    <label className="text-xs font-bold uppercase tracking-wider text-muted-foreground">Primary Color</label>
+                    <input type="color" defaultValue="#3b82f6" className="h-12 w-20 p-0 border-0 rounded-lg cursor-pointer" onChange={(e) => document.documentElement.style.setProperty('--primary', e.target.value)} />
+                  </div>
+                  <div className="p-4 rounded-2xl bg-background border border-border flex flex-col items-center justify-center gap-3">
+                    <label className="text-xs font-bold uppercase tracking-wider text-muted-foreground">Background Color</label>
+                    <input type="color" defaultValue="#020817" className="h-12 w-20 p-0 border-0 rounded-lg cursor-pointer" onChange={(e) => document.documentElement.style.setProperty('--background', e.target.value)} />
+                  </div>
+                  <div className="p-4 rounded-2xl bg-background border border-border flex flex-col items-center justify-center gap-3">
+                    <label className="text-xs font-bold uppercase tracking-wider text-muted-foreground">Card Color</label>
+                    <input type="color" defaultValue="#0f172a" className="h-12 w-20 p-0 border-0 rounded-lg cursor-pointer" onChange={(e) => document.documentElement.style.setProperty('--card', e.target.value)} />
+                  </div>
+                  <div className="p-4 rounded-2xl bg-background border border-border flex flex-col items-center justify-center gap-3">
+                    <label className="text-xs font-bold uppercase tracking-wider text-muted-foreground">Text Foreground</label>
+                    <input type="color" defaultValue="#f8fafc" className="h-12 w-20 p-0 border-0 rounded-lg cursor-pointer" onChange={(e) => document.documentElement.style.setProperty('--foreground', e.target.value)} />
                   </div>
                 </div>
-              </div>
+                <p className="text-xs text-muted-foreground mt-4 text-center">Changes are previewed immediately via CSS variables. Click "Save All Changes" to persist.</p>
+              </section>
+            </div>
 
-              <div className="pt-6 mt-6 border-t border-border flex gap-3 justify-end">
-                <Button variant="destructive" onClick={() => toast.warning("Maintenance mode initiated")}>Enable Maintenance Mode</Button>
-                <Button onClick={() => toast.success("Global platform settings updated successfully")}>Save All Changes</Button>
-              </div>
-            </section>
+            <div className="flex flex-col sm:flex-row gap-3 justify-end mt-4">
+              <Button variant="destructive" onClick={() => toast.warning("Maintenance mode initiated")}>Enable Maintenance Mode</Button>
+              <Button onClick={() => toast.success("Global platform settings updated successfully")} className="bg-emerald-600 hover:bg-emerald-700 text-white">Save All Changes</Button>
+            </div>
           </div>
         )}
 
@@ -748,7 +806,7 @@ function NavButton({ active, onClick, icon: Icon, label }: { active: boolean; on
     <button
       onClick={onClick}
       className={cn(
-        "w-full flex items-center gap-3 px-4 py-3 rounded-xl text-sm font-medium transition-all",
+        "flex shrink-0 w-auto md:w-full items-center gap-2.5 px-4 py-3 rounded-xl text-sm font-medium transition-all",
         active 
           ? "bg-primary text-primary-foreground shadow-md" 
           : "text-muted-foreground hover:bg-accent hover:text-foreground"

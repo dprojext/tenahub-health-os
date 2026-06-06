@@ -5,6 +5,7 @@
 //     error logger plugins, and sandbox detection (port/host/strictPort).
 // You can pass additional config via defineConfig({ vite: { ... }, etc... }) if needed.
 import { defineConfig } from "@lovable.dev/vite-tanstack-config";
+import { VitePWA } from "vite-plugin-pwa";
 
 export default defineConfig({
   tanstackStart: {
@@ -12,4 +13,28 @@ export default defineConfig({
     // nitro/vite builds from this
     server: { entry: "server" },
   },
+  vite: {
+    plugins: [
+      VitePWA({
+        registerType: 'autoUpdate',
+        includeAssets: ['favicon.ico', 'apple-touch-icon.png', 'mask-icon.svg'],
+        manifest: {
+          name: 'TenaGulecha Health OS',
+          short_name: 'TenaGulecha',
+          description: 'A transparent and unified Health OS connecting users, clinics, and wellness mini-apps.',
+          theme_color: '#3b82f6',
+          icons: [
+            {
+              src: 'favicon.ico',
+              sizes: '64x64',
+              type: 'image/x-icon'
+            }
+          ]
+        },
+        workbox: {
+          globPatterns: ['**/*.{js,css,html,ico,png,svg}']
+        }
+      })
+    ]
+  }
 });
