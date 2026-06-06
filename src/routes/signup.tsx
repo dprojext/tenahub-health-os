@@ -1,7 +1,8 @@
 import { createFileRoute, Link, useNavigate } from "@tanstack/react-router";
-import { Activity, ArrowLeft, ArrowRight, Eye, EyeOff, HeartPulse, Stethoscope, Briefcase, MailCheck, ClipboardList, CheckCircle2 } from "lucide-react";
+import { Activity, ArrowLeft, ArrowRight, Eye, EyeOff, HeartPulse, Stethoscope, Briefcase, MailCheck, ClipboardList, CheckCircle2, Globe } from "lucide-react";
 import { useState } from "react";
 import { cn } from "@/lib/utils";
+import { useTranslation } from "@/lib/i18n";
 
 export const Route = createFileRoute("/signup")({
   head: () => ({
@@ -12,6 +13,7 @@ export const Route = createFileRoute("/signup")({
 
 function SignupPage() {
   const navigate = useNavigate();
+  const { t, language, setLanguage } = useTranslation();
   const [role, setRole] = useState<"user" | "partner" | "professional">("user");
   const [step, setStep] = useState<1 | 2 | 3>(1);
   const [showPassword, setShowPassword] = useState(false);
@@ -60,12 +62,24 @@ function SignupPage() {
     <div className="min-h-screen bg-background flex flex-col items-center justify-center p-4">
       <div className="w-full max-w-md">
         
-        <div className="mb-8 flex justify-center">
+        <div className="mb-8 flex flex-col items-center justify-center relative">
+          <div className="absolute right-0 top-0">
+            <div className="relative group">
+              <button className="flex h-8 items-center justify-center rounded-full border border-border bg-card px-3 text-xs font-medium text-foreground transition-colors hover:bg-accent">
+                <Globe className="h-3.5 w-3.5 mr-1.5" />
+                <span>{language === "English" ? "EN" : "አማ"}</span>
+              </button>
+              <div className="absolute right-0 top-full mt-1 hidden w-32 flex-col overflow-hidden rounded-xl border border-border bg-card shadow-lg group-hover:flex z-50">
+                <button onClick={() => setLanguage("English")} className="px-4 py-2 text-left text-sm hover:bg-accent">English</button>
+                <button onClick={() => setLanguage("Amharic")} className="px-4 py-2 text-left text-sm hover:bg-accent">አማርኛ</button>
+              </div>
+            </div>
+          </div>
           <div className="flex items-center gap-2 text-primary">
             <div className="flex h-10 w-10 items-center justify-center rounded-2xl bg-primary/10 text-primary">
               <Activity className="h-6 w-6" />
             </div>
-            <span className="text-xl font-bold tracking-tight text-foreground">TenaGulecha</span>
+            <span className="text-xl font-bold tracking-tight text-foreground">{t("app.title")}</span>
           </div>
         </div>
 

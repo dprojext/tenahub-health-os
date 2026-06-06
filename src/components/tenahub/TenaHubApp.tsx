@@ -1,5 +1,5 @@
 import { useState, useEffect } from "react";
-import { Activity, Building2, Shield, User, Settings, LogOut, ChevronDown } from "lucide-react";
+import { Activity, Building2, Shield, User, Settings, LogOut, ChevronDown, Globe } from "lucide-react";
 import { UserDashboard } from "./UserDashboard";
 import { useTranslation } from "@/lib/i18n";
 import { PartnerWorkspace } from "./PartnerWorkspace";
@@ -84,6 +84,16 @@ export function TenaHubApp({ initialView = "user" }: { initialView?: View }) {
           )}
 
           <div className="flex items-center gap-2">
+            <div className="relative group">
+              <button className="flex h-9 items-center justify-center rounded-full border border-border bg-card px-3 text-xs font-medium text-muted-foreground transition-colors hover:bg-accent hover:text-foreground">
+                <Globe className="h-3.5 w-3.5 mr-1.5" />
+                {language === "English" ? "EN" : "አማ"}
+              </button>
+              <div className="absolute right-0 top-full mt-1 hidden w-32 flex-col overflow-hidden rounded-xl border border-border bg-card shadow-lg group-hover:flex">
+                <button onClick={() => { setLanguage("English"); toast.success("Language updated"); }} className="px-4 py-2 text-left text-sm hover:bg-accent">English</button>
+                <button onClick={() => { setLanguage("Amharic"); toast.success("Language updated"); }} className="px-4 py-2 text-left text-sm hover:bg-accent">አማርኛ</button>
+              </div>
+            </div>
             <button 
               onClick={() => setShowSettingsModal(true)}
               className="flex h-9 w-9 items-center justify-center rounded-full border border-border bg-card text-muted-foreground transition-colors hover:bg-accent hover:text-foreground"

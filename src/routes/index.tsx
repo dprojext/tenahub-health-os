@@ -1,5 +1,5 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
-import { Activity, ArrowRight, HeartPulse, Stethoscope, Shield, CheckCircle2, Code2, Rocket, Layers } from "lucide-react";
+import { Activity, ArrowRight, HeartPulse, Stethoscope, Shield, CheckCircle2, Code2, Rocket, Layers, Globe } from "lucide-react";
 import { useState } from "react";
 import { toast } from "sonner";
 import { useTranslation } from "@/lib/i18n";
@@ -15,7 +15,7 @@ export const Route = createFileRoute("/")({
 });
 
 function LandingPage() {
-  const { t } = useTranslation();
+  const { t, language, setLanguage } = useTranslation();
   const [appName, setAppName] = useState("");
   const [devName, setDevName] = useState("");
   const [category, setCategory] = useState("Mental Health");
@@ -123,8 +123,20 @@ function LandingPage() {
             <Activity className="h-6 w-6 text-primary" />
             <span className="text-lg font-bold tracking-tight">{t("app.title")}</span>
           </div>
-          <div className="flex items-center gap-6">
-            <Link to="/login" className="text-sm font-medium text-muted-foreground hover:text-foreground transition-colors">
+          <div className="flex items-center gap-4 sm:gap-6">
+            <div className="relative group">
+              <button className="flex h-8 items-center justify-center rounded-full border border-white/10 bg-white/5 px-3 text-xs font-medium text-foreground transition-colors hover:bg-white/10">
+                <Globe className="h-3.5 w-3.5 mr-1.5" />
+                <span className="hidden sm:inline">{language}</span>
+                <span className="inline sm:hidden">{language === "English" ? "EN" : "አማ"}</span>
+              </button>
+              <div className="absolute right-0 top-full mt-1 hidden w-32 flex-col overflow-hidden rounded-xl border border-white/10 bg-card shadow-lg group-hover:flex">
+                <button onClick={() => setLanguage("English")} className="px-4 py-2 text-left text-sm hover:bg-accent">English</button>
+                <button onClick={() => setLanguage("Amharic")} className="px-4 py-2 text-left text-sm hover:bg-accent">አማርኛ</button>
+              </div>
+            </div>
+
+            <Link to="/login" className="text-sm font-medium text-muted-foreground hover:text-foreground transition-colors hidden sm:inline-block">
               {t("nav.login")}
             </Link>
             <Link
