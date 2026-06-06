@@ -26,6 +26,8 @@ export function TenaHubApp({ initialView = "user" }: { initialView?: View }) {
   // Settings State
   const [isDarkMode, setIsDarkMode] = useState(false);
   const [emailNotifs, setEmailNotifs] = useState(true);
+  const [isMagnified, setIsMagnified] = useState(false);
+  const [isInverted, setIsInverted] = useState(false);
 
   useEffect(() => {
     const savedTheme = localStorage.getItem("theme");
@@ -161,20 +163,47 @@ export function TenaHubApp({ initialView = "user" }: { initialView?: View }) {
               </div>
               <div className="flex items-center justify-between rounded-xl border border-border p-3">
                 <div>
-                  <div className="text-sm font-medium">Language</div>
-                  <div className="text-xs text-muted-foreground">Select your preferred language</div>
+                  <div className="text-sm font-medium">Text Magnification</div>
+                  <div className="text-xs text-muted-foreground">Increase text size for readability</div>
                 </div>
-                <select 
-                  className="rounded-lg border border-input bg-background px-2 py-1 text-xs" 
-                  value={language}
-                  onChange={(e) => { 
-                    setLanguage(e.target.value as "English" | "Amharic"); 
-                    toast.success("Language updated"); 
-                  }}
+                <button 
+                  onClick={() => {
+                    const nextState = !isMagnified;
+                    setIsMagnified(nextState);
+                    if (nextState) {
+                      document.documentElement.style.fontSize = "18px";
+                      toast.success("Text magnification enabled");
+                    } else {
+                      document.documentElement.style.fontSize = "16px";
+                      toast.success("Text magnification disabled");
+                    }
+                  }} 
+                  className={cn("relative inline-flex h-6 w-11 items-center rounded-full transition-colors", isMagnified ? "bg-blue-500" : "bg-muted")}
                 >
-                  <option>English</option>
-                  <option>Amharic</option>
-                </select>
+                  <span className={cn("inline-block h-4 w-4 transform rounded-full bg-white transition-transform", isMagnified ? "translate-x-6" : "translate-x-1")} />
+                </button>
+              </div>
+              <div className="flex items-center justify-between rounded-xl border border-border p-3">
+                <div>
+                  <div className="text-sm font-medium">High Contrast / Invert</div>
+                  <div className="text-xs text-muted-foreground">Invert colors for visual accessibility</div>
+                </div>
+                <button 
+                  onClick={() => {
+                    const nextState = !isInverted;
+                    setIsInverted(nextState);
+                    if (nextState) {
+                      document.documentElement.style.filter = "invert(1) hue-rotate(180deg)";
+                      toast.success("High contrast enabled");
+                    } else {
+                      document.documentElement.style.filter = "none";
+                      toast.success("High contrast disabled");
+                    }
+                  }} 
+                  className={cn("relative inline-flex h-6 w-11 items-center rounded-full transition-colors", isInverted ? "bg-amber-500" : "bg-muted")}
+                >
+                  <span className={cn("inline-block h-4 w-4 transform rounded-full bg-white transition-transform", isInverted ? "translate-x-6" : "translate-x-1")} />
+                </button>
               </div>
             </div>
             <button 

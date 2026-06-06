@@ -10,7 +10,7 @@ export const defaultDictionary: Dictionary = {
   "nav.signup": { English: "Sign up", Amharic: "ተመዝገብ" },
   "hero.badge": { English: "Welcome to TenaGulecha", Amharic: "ወደ ጤናጉለቻ እንኳን በደህና መጡ" },
   "hero.title": { English: "HEALTH MANAGEMENT, MADE TRANSPARENT.", Amharic: "የጤና አያያዝ፣ ግልጽ ተደርጓል።" },
-  "hero.subtitle": { English: "TenaGulecha acts as an operating system for your health journey. Whether you are an individual tracking wellness goals or an organizer running a clinic, our transparent ecosystem brings everything together seamlessly.", Amharic: "ጤናጉለቻ ለጤናዎ ጉዞ እንደ ኦፕሬቲንግ ሲስተም ያገለግላል። ጤናዎን የሚከታተሉ ግለሰብም ሆኑ ክሊኒክ የሚያስተዳድሩ ድርጅት፣ የእኛ ግልጽ ስነ-ምህዳር ሁሉንም ነገር በአንድ ላይ ያመጣል።" },
+  "hero.subtitle": { English: "This is East Africa's first Health Super App that holds professionals, organizations, and wellness mini-apps in one transparent ecosystem. Take control of your health journey with integrated health management tools and seamless service connections.", Amharic: "በምስራቅ አፍሪካ የመጀመሪያው የሆነው ይህ የጤና ሱፐር አፕ ባለሙያዎችን፣ ድርጅቶችን እና የጤና ሚኒ-አፕሊኬሽኖችን በአንድ ግልጽ ስነ-ምህዳር ያገናኛል። በተዋሃዱ የጤና አስተዳደር መሳሪያዎች የጤናዎን ጉዞ ይቆጣጠሩ።" },
   "hero.start": { English: "Get Started", Amharic: "ጀምር" },
   "hero.signin": { English: "Sign In", Amharic: "ግባ" },
   "about.title": { English: "About TenaGulecha", Amharic: "ስለ ጤናጉለቻ" },
