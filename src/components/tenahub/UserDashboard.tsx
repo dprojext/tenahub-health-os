@@ -933,7 +933,7 @@ export function UserDashboard() {
       </section>
 
       {/* ═══ TABBED NAVIGATION ═══ */}
-      <div className="flex justify-center overflow-x-auto pb-2 gap-2 scrollbar-hide">
+      <div className="flex flex-wrap justify-center pb-2 gap-2">
         <TabButton active={activeTab === "dashboard"} onClick={() => setActiveTab("dashboard")} icon={LayoutDashboard} label="Dashboard" />
         <TabButton active={activeTab === "healthdata"} onClick={() => setActiveTab("healthdata")} icon={Activity} label="Health Data" />
         <TabButton active={activeTab === "miniapps"} onClick={() => setActiveTab("miniapps")} icon={Target} label="Mini-apps" />

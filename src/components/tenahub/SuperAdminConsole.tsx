@@ -370,33 +370,35 @@ export function SuperAdminConsole() {
         {activeTab === "users" && (
           <div className="space-y-6 animate-in fade-in slide-in-from-bottom-2 duration-300">
             <section className="rounded-3xl bg-card border border-border p-6">
-              <div className="mb-6">
-                <h2 className="text-xl font-bold">User Management</h2>
-                <p className="text-sm text-muted-foreground">Click a user to view their account and connected modules.</p>
+              <div className="mb-6 flex justify-between items-center">
+                <div>
+                  <h2 className="text-xl font-bold">User Management</h2>
+                  <p className="text-sm text-muted-foreground">Click a user to view their account and connected modules.</p>
+                </div>
               </div>
-              <div className="overflow-hidden rounded-2xl border border-border">
-                <table className="w-full text-sm">
-                  <thead className="bg-muted text-xs uppercase tracking-wide text-muted-foreground">
-                    <tr>
-                      <th className="px-4 py-3 text-left">Name</th>
-                      <th className="px-4 py-3 text-left">Email</th>
-                      <th className="px-4 py-3 text-left">Joined</th>
-                    </tr>
-                  </thead>
-                  <tbody className="divide-y divide-border">
-                    {allUsersList.map((u, i) => (
-                      <tr 
-                        key={u.id} 
-                        onClick={() => setModalData({ title: "User Profile Overview", data: u })}
-                        className={cn("cursor-pointer hover:bg-accent/40 transition", i % 2 ? "bg-background" : "bg-card")}
-                      >
-                        <td className="px-4 py-3 font-medium">{u.name}</td>
-                        <td className="px-4 py-3 text-muted-foreground">{u.email}</td>
-                        <td className="px-4 py-3 text-muted-foreground">{u.joined}</td>
-                      </tr>
-                    ))}
-                  </tbody>
-                </table>
+
+              <div className="grid gap-4 sm:grid-cols-2">
+                {allUsersList.map((u) => (
+                  <div 
+                    key={u.id} 
+                    onClick={() => setModalData({ title: "User Profile Overview", data: u })}
+                    className="group flex flex-col rounded-2xl border border-border bg-background p-4 shadow-sm transition hover:shadow-md cursor-pointer hover:border-primary/50"
+                  >
+                    <div className="flex items-center gap-4">
+                      <div className="flex h-12 w-12 items-center justify-center rounded-full bg-primary/10 text-primary font-bold">
+                        {u.name.charAt(0)}{u.name.split(" ")[1]?.charAt(0) || u.name.charAt(1)}
+                      </div>
+                      <div className="flex-1">
+                        <div className="font-semibold text-base">{u.name}</div>
+                        <div className="text-sm text-muted-foreground">{u.email}</div>
+                      </div>
+                      <div className="text-right">
+                        <div className="text-xs font-medium bg-secondary text-secondary-foreground px-2 py-1 rounded-md">{u.role}</div>
+                        <div className="text-[10px] text-muted-foreground mt-1 uppercase">{u.joined}</div>
+                      </div>
+                    </div>
+                  </div>
+                ))}
               </div>
             </section>
           </div>

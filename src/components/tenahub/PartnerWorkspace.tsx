@@ -392,7 +392,7 @@ export function PartnerWorkspace() {
       )}
 
       {/* Tab Navigation */}
-      <div className="flex justify-center border-b border-border overflow-x-auto pb-1 gap-2 scrollbar-hide">
+      <div className="flex flex-wrap justify-center border-b border-border pb-2 gap-2">
         <TabNavButton active={activeTab === "dashboard"} onClick={() => setActiveTab("dashboard")} Icon={Activity} label="Dashboard" />
         <TabNavButton active={activeTab === "analytics"} onClick={() => setActiveTab("analytics")} Icon={BarChart3} label="Analytics" />
         <TabNavButton active={activeTab === "reports"} onClick={() => setActiveTab("reports")} Icon={FileText} label="Reports" />
@@ -1019,7 +1019,7 @@ function TabNavButton({ active, onClick, Icon, label }: { active: boolean; onCli
     <button
       onClick={onClick}
       className={cn(
-        "flex items-center gap-1.5 px-4 py-2 text-xs font-bold rounded-lg border border-transparent whitespace-nowrap transition-all",
+        "flex items-center gap-1.5 px-4 py-2 text-xs font-bold rounded-lg border border-transparent transition-all",
         active 
           ? "bg-primary/10 text-primary border-primary/20" 
           : "text-muted-foreground hover:text-foreground hover:bg-accent/40"

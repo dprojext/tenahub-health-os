@@ -42,34 +42,34 @@ export function ProfessionalDashboard() {
     <div className="space-y-6 relative">
       
       {/* Tab Navigation */}
-      <div className="flex justify-center border-b border-border overflow-x-auto pb-1 gap-2 scrollbar-hide">
+      <div className="flex flex-wrap justify-center border-b border-border pb-2 gap-2">
         <button
           onClick={() => setActiveTab("dashboard")}
-          className={cn("flex items-center gap-1.5 px-4 py-2 text-xs font-bold rounded-lg border border-transparent whitespace-nowrap transition-all", activeTab === "dashboard" ? "bg-primary/10 text-primary border-primary/20" : "text-muted-foreground hover:text-foreground hover:bg-accent/40")}
+          className={cn("flex items-center gap-1.5 px-4 py-2 text-xs font-bold rounded-lg border border-transparent transition-all", activeTab === "dashboard" ? "bg-primary/10 text-primary border-primary/20" : "text-muted-foreground hover:text-foreground hover:bg-accent/40")}
         >
           <Activity className="h-4 w-4" /> Dashboard
         </button>
         <button
           onClick={() => setActiveTab("meetings")}
-          className={cn("flex items-center gap-1.5 px-4 py-2 text-xs font-bold rounded-lg border border-transparent whitespace-nowrap transition-all", activeTab === "meetings" ? "bg-primary/10 text-primary border-primary/20" : "text-muted-foreground hover:text-foreground hover:bg-accent/40")}
+          className={cn("flex items-center gap-1.5 px-4 py-2 text-xs font-bold rounded-lg border border-transparent transition-all", activeTab === "meetings" ? "bg-primary/10 text-primary border-primary/20" : "text-muted-foreground hover:text-foreground hover:bg-accent/40")}
         >
           <CalendarDays className="h-4 w-4" /> Meetings
         </button>
         <button
           onClick={() => setActiveTab("analytics")}
-          className={cn("flex items-center gap-1.5 px-4 py-2 text-xs font-bold rounded-lg border border-transparent whitespace-nowrap transition-all", activeTab === "analytics" ? "bg-primary/10 text-primary border-primary/20" : "text-muted-foreground hover:text-foreground hover:bg-accent/40")}
+          className={cn("flex items-center gap-1.5 px-4 py-2 text-xs font-bold rounded-lg border border-transparent transition-all", activeTab === "analytics" ? "bg-primary/10 text-primary border-primary/20" : "text-muted-foreground hover:text-foreground hover:bg-accent/40")}
         >
           <BarChart3 className="h-4 w-4" /> Analytics
         </button>
         <button
           onClick={() => setActiveTab("ai")}
-          className={cn("flex items-center gap-1.5 px-4 py-2 text-xs font-bold rounded-lg border border-transparent whitespace-nowrap transition-all", activeTab === "ai" ? "bg-primary/10 text-primary border-primary/20" : "text-muted-foreground hover:text-foreground hover:bg-accent/40")}
+          className={cn("flex items-center gap-1.5 px-4 py-2 text-xs font-bold rounded-lg border border-transparent transition-all", activeTab === "ai" ? "bg-primary/10 text-primary border-primary/20" : "text-muted-foreground hover:text-foreground hover:bg-accent/40")}
         >
           <Bot className="h-4 w-4" /> AI Consult
         </button>
         <button
           onClick={() => setActiveTab("profile")}
-          className={cn("flex items-center gap-1.5 px-4 py-2 text-xs font-bold rounded-lg border border-transparent whitespace-nowrap transition-all", activeTab === "profile" ? "bg-primary/10 text-primary border-primary/20" : "text-muted-foreground hover:text-foreground hover:bg-accent/40")}
+          className={cn("flex items-center gap-1.5 px-4 py-2 text-xs font-bold rounded-lg border border-transparent transition-all", activeTab === "profile" ? "bg-primary/10 text-primary border-primary/20" : "text-muted-foreground hover:text-foreground hover:bg-accent/40")}
         >
           <User className="h-4 w-4" /> Profile
         </button>
