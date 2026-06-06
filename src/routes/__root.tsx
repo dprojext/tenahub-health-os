@@ -10,6 +10,7 @@ import {
 import { useEffect, type ReactNode } from "react";
 
 import appCss from "../styles.css?url";
+import { reportLovableError } from "../lib/lovable-error-reporting";
 import { Toaster } from "@/components/ui/sonner";
 
 function NotFoundComponent() {
@@ -37,6 +38,9 @@ function NotFoundComponent() {
 function ErrorComponent({ error, reset }: { error: Error; reset: () => void }) {
   console.error(error);
   const router = useRouter();
+  useEffect(() => {
+    reportLovableError(error, { boundary: "tanstack_root_error_component" });
+  }, [error]);
 
   return (
     <div className="flex min-h-screen items-center justify-center bg-background px-4">
@@ -74,14 +78,18 @@ export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
     meta: [
       { charSet: "utf-8" },
       { name: "viewport", content: "width=device-width, initial-scale=1" },
-      { title: "TenaGulecha Health OS" },
-      { name: "description", content: "A transparent and unified Health OS connecting users, clinics, and wellness mini-apps." },
-      { name: "author", content: "TenaGulecha" },
-      { property: "og:title", content: "TenaGulecha Health OS" },
-      { property: "og:description", content: "A transparent and unified Health OS connecting users, clinics, and wellness mini-apps." },
+      { title: "tenagulicha" },
+      { name: "description", content: "The one time stop for all Ethiopia and East Africa Health Super App" },
+      { name: "author", content: "Lovable" },
+      { property: "og:title", content: "tenagulicha" },
+      { property: "og:description", content: "The one time stop for all Ethiopia and East Africa Health Super App" },
       { property: "og:type", content: "website" },
       { name: "twitter:card", content: "summary" },
-      { name: "twitter:site", content: "@TenaGulecha" },
+      { name: "twitter:site", content: "@Lovable" },
+      { name: "twitter:title", content: "tenagulicha" },
+      { name: "twitter:description", content: "The one time stop for all Ethiopia and East Africa Health Super App" },
+      { property: "og:image", content: "https://pub-bb2e103a32db4e198524a2e9ed8f35b4.r2.dev/2a7ecc38-2fbd-45fa-b9d3-c066b39ca8e5/id-preview-039af2e0--84b72b11-003b-41e5-bd1c-56e648060df0.lovable.app-1780751043873.png" },
+      { name: "twitter:image", content: "https://pub-bb2e103a32db4e198524a2e9ed8f35b4.r2.dev/2a7ecc38-2fbd-45fa-b9d3-c066b39ca8e5/id-preview-039af2e0--84b72b11-003b-41e5-bd1c-56e648060df0.lovable.app-1780751043873.png" },
     ],
     links: [
       {
