@@ -69,9 +69,11 @@ function SignupPage() {
                 <Globe className="h-3.5 w-3.5 mr-1.5" />
                 <span>{language === "English" ? "EN" : "አማ"}</span>
               </button>
-              <div className="absolute right-0 top-full mt-1 hidden w-32 flex-col overflow-hidden rounded-xl border border-border bg-card shadow-lg group-hover:flex z-50">
-                <button onClick={() => setLanguage("English")} className="px-4 py-2 text-left text-sm hover:bg-accent">English</button>
-                <button onClick={() => setLanguage("Amharic")} className="px-4 py-2 text-left text-sm hover:bg-accent">አማርኛ</button>
+              <div className="absolute right-0 top-full pt-1 hidden w-32 flex-col group-hover:flex z-50">
+                <div className="flex flex-col overflow-hidden rounded-xl border border-border bg-card shadow-lg">
+                  <button onClick={() => setLanguage("English")} className="px-4 py-2 text-left text-sm hover:bg-accent">English</button>
+                  <button onClick={() => setLanguage("Amharic")} className="px-4 py-2 text-left text-sm hover:bg-accent">አማርኛ</button>
+                </div>
               </div>
             </div>
           </div>

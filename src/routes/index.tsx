@@ -16,6 +16,7 @@ export const Route = createFileRoute("/")({
 
 function LandingPage() {
   const { t, language, setLanguage } = useTranslation();
+  const [showLangDropdown, setShowLangDropdown] = useState(false);
   const [appName, setAppName] = useState("");
   const [devName, setDevName] = useState("");
   const [category, setCategory] = useState("Mental Health");
@@ -124,16 +125,21 @@ function LandingPage() {
             <span className="text-lg font-bold tracking-tight">{t("app.title")}</span>
           </div>
           <div className="flex items-center gap-4 sm:gap-6">
-            <div className="relative group">
-              <button className="flex h-8 items-center justify-center rounded-full border border-white/10 bg-white/5 px-3 text-xs font-medium text-foreground transition-colors hover:bg-white/10">
+            <div className="relative">
+              <button onClick={() => setShowLangDropdown(!showLangDropdown)} className="flex h-8 items-center justify-center rounded-full border border-white/10 bg-white/5 px-3 text-xs font-medium text-foreground transition-colors hover:bg-white/10">
                 <Globe className="h-3.5 w-3.5 mr-1.5" />
                 <span className="hidden sm:inline">{language}</span>
                 <span className="inline sm:hidden">{language === "English" ? "EN" : "አማ"}</span>
               </button>
-              <div className="absolute right-0 top-full mt-1 hidden w-32 flex-col overflow-hidden rounded-xl border border-white/10 bg-card shadow-lg group-hover:flex">
-                <button onClick={() => setLanguage("English")} className="px-4 py-2 text-left text-sm hover:bg-accent">English</button>
-                <button onClick={() => setLanguage("Amharic")} className="px-4 py-2 text-left text-sm hover:bg-accent">አማርኛ</button>
-              </div>
+              {showLangDropdown && (
+                <>
+                  <div className="fixed inset-0 z-40" onClick={() => setShowLangDropdown(false)} />
+                  <div className="absolute right-0 top-full mt-2 w-32 flex flex-col overflow-hidden rounded-xl border border-white/10 bg-card shadow-lg z-50 animate-in fade-in zoom-in-95 duration-150">
+                    <button onClick={() => { setLanguage("English"); setShowLangDropdown(false); }} className="px-4 py-2 text-left text-sm hover:bg-accent">English</button>
+                    <button onClick={() => { setLanguage("Amharic"); setShowLangDropdown(false); }} className="px-4 py-2 text-left text-sm hover:bg-accent">አማርኛ</button>
+                  </div>
+                </>
+              )}
             </div>
 
             <Link to="/login" className="text-sm font-medium text-muted-foreground hover:text-foreground transition-colors hidden sm:inline-block">
