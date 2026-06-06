@@ -30,7 +30,9 @@ const patients = [
 
 import { ProfilePage } from "./ProfilePage";
 
-type ProTab = "dashboard" | "profile";
+import { BarChart3, Users, Star, TrendingUp, Bot, Send } from "lucide-react";
+
+type ProTab = "dashboard" | "meetings" | "analytics" | "ai" | "profile";
 
 export function ProfessionalDashboard() {
   const [activeTab, setActiveTab] = useState<ProTab>("dashboard");
@@ -46,6 +48,24 @@ export function ProfessionalDashboard() {
           className={cn("flex items-center gap-1.5 px-4 py-2 text-xs font-bold rounded-lg border border-transparent whitespace-nowrap transition-all", activeTab === "dashboard" ? "bg-primary/10 text-primary border-primary/20" : "text-muted-foreground hover:text-foreground hover:bg-accent/40")}
         >
           <Activity className="h-4 w-4" /> Dashboard
+        </button>
+        <button
+          onClick={() => setActiveTab("meetings")}
+          className={cn("flex items-center gap-1.5 px-4 py-2 text-xs font-bold rounded-lg border border-transparent whitespace-nowrap transition-all", activeTab === "meetings" ? "bg-primary/10 text-primary border-primary/20" : "text-muted-foreground hover:text-foreground hover:bg-accent/40")}
+        >
+          <CalendarDays className="h-4 w-4" /> Meetings
+        </button>
+        <button
+          onClick={() => setActiveTab("analytics")}
+          className={cn("flex items-center gap-1.5 px-4 py-2 text-xs font-bold rounded-lg border border-transparent whitespace-nowrap transition-all", activeTab === "analytics" ? "bg-primary/10 text-primary border-primary/20" : "text-muted-foreground hover:text-foreground hover:bg-accent/40")}
+        >
+          <BarChart3 className="h-4 w-4" /> Analytics
+        </button>
+        <button
+          onClick={() => setActiveTab("ai")}
+          className={cn("flex items-center gap-1.5 px-4 py-2 text-xs font-bold rounded-lg border border-transparent whitespace-nowrap transition-all", activeTab === "ai" ? "bg-primary/10 text-primary border-primary/20" : "text-muted-foreground hover:text-foreground hover:bg-accent/40")}
+        >
+          <Bot className="h-4 w-4" /> AI Consult
         </button>
         <button
           onClick={() => setActiveTab("profile")}
@@ -196,6 +216,196 @@ export function ProfessionalDashboard() {
             ))}
           </div>
             </section>
+          </div>
+        </div>
+      )}
+
+      {activeTab === "meetings" && (
+        <div className="space-y-6 animate-in fade-in slide-in-from-bottom-2 duration-300">
+          <h2 className="text-2xl font-bold tracking-tight mb-2">All Meetings & Consultations</h2>
+          <p className="text-sm text-muted-foreground mb-6">View your complete schedule, past history, and upcoming telehealth sessions.</p>
+          
+          <div className="rounded-3xl border border-border bg-card p-6 overflow-hidden">
+            <div className="overflow-x-auto">
+              <table className="w-full text-sm text-left">
+                <thead className="text-xs text-muted-foreground uppercase bg-muted/50">
+                  <tr>
+                    <th className="px-4 py-3 rounded-l-xl">Patient</th>
+                    <th className="px-4 py-3">Date & Time</th>
+                    <th className="px-4 py-3">Type</th>
+                    <th className="px-4 py-3">Status</th>
+                    <th className="px-4 py-3 rounded-r-xl text-right">Action</th>
+                  </tr>
+                </thead>
+                <tbody className="divide-y divide-border">
+                  {[
+                    ...appointments,
+                    { id: 4, patient: "Aster Bekele", type: "Prescription Renewal", time: "04:00 PM (Yesterday)", duration: "15 min", status: "Completed", details: "Renewed medication." },
+                    { id: 5, patient: "Solomon Tsegaye", type: "Follow-up", time: "09:00 AM (2 Days Ago)", duration: "30 min", status: "Completed", details: "Review of progress." },
+                    { id: 6, patient: "Marta Girma", type: "General Checkup", time: "10:00 AM (Tomorrow)", duration: "30 min", status: "Upcoming", details: "Routine wellness check." },
+                  ].map((apt) => (
+                    <tr key={apt.id} className="border-b border-white/5 bg-card hover:bg-accent/20 cursor-pointer" onClick={() => setModalData({ title: "Appointment Details", data: apt })}>
+                      <td className="px-4 py-3 font-medium text-foreground">{apt.patient}</td>
+                      <td className="px-4 py-3 text-muted-foreground">{apt.time} ({apt.duration})</td>
+                      <td className="px-4 py-3 text-muted-foreground">{apt.type}</td>
+                      <td className="px-4 py-3">
+                        <span className={cn(
+                          "inline-flex items-center px-2 py-0.5 rounded-full text-[10px] font-bold uppercase",
+                          apt.status === "Upcoming" ? "bg-blue-500/10 text-blue-500" : "bg-emerald-500/10 text-emerald-500"
+                        )}>
+                          {apt.status === "Upcoming" ? <Clock className="mr-1 h-3 w-3"/> : <CheckCircle2 className="mr-1 h-3 w-3"/>}
+                          {apt.status}
+                        </span>
+                      </td>
+                      <td className="px-4 py-3 text-right" onClick={(e) => e.stopPropagation()}>
+                        {apt.status === "Upcoming" ? (
+                          <Button size="sm" onClick={() => toast.success(`Starting video call with ${apt.patient}...`)}>
+                            <Video className="h-4 w-4 mr-1" /> Join
+                          </Button>
+                        ) : (
+                          <Button size="sm" variant="outline" onClick={() => toast.info(`Viewing notes for ${apt.patient}...`)}>
+                            <FileText className="h-4 w-4 mr-1" /> Notes
+                          </Button>
+                        )}
+                      </td>
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
+            </div>
+          </div>
+        </div>
+      )}
+
+      {activeTab === "analytics" && (
+        <div className="space-y-6 animate-in fade-in slide-in-from-bottom-2 duration-300">
+          <h2 className="text-2xl font-bold tracking-tight mb-2">Professional Analytics</h2>
+          <p className="text-sm text-muted-foreground mb-6">Metrics and insights on your practice, patients, and ratings.</p>
+
+          <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
+            <div className="rounded-3xl border border-border bg-card p-5">
+              <div className="flex items-center gap-3 mb-2 text-muted-foreground"><Users className="h-4 w-4" /> Total Patients</div>
+              <div className="text-3xl font-extrabold">142</div>
+              <div className="text-xs text-emerald-500 mt-1 flex items-center gap-1"><TrendingUp className="h-3 w-3" /> +12 this month</div>
+            </div>
+            <div className="rounded-3xl border border-border bg-card p-5">
+              <div className="flex items-center gap-3 mb-2 text-muted-foreground"><Video className="h-4 w-4" /> Consultations</div>
+              <div className="text-3xl font-extrabold">85</div>
+              <div className="text-xs text-emerald-500 mt-1 flex items-center gap-1"><TrendingUp className="h-3 w-3" /> +5 this month</div>
+            </div>
+            <div className="rounded-3xl border border-border bg-card p-5">
+              <div className="flex items-center gap-3 mb-2 text-muted-foreground"><Star className="h-4 w-4" /> Avg Rating</div>
+              <div className="text-3xl font-extrabold">4.9</div>
+              <div className="text-xs text-muted-foreground mt-1 flex items-center gap-1">Based on 64 reviews</div>
+            </div>
+            <div className="rounded-3xl border border-border bg-card p-5">
+              <div className="flex items-center gap-3 mb-2 text-muted-foreground"><Activity className="h-4 w-4" /> Response Time</div>
+              <div className="text-3xl font-extrabold">{"< 2hr"}</div>
+              <div className="text-xs text-emerald-500 mt-1 flex items-center gap-1">Top 5% of professionals</div>
+            </div>
+          </div>
+
+          <div className="grid md:grid-cols-2 gap-6">
+            <div className="rounded-3xl border border-border bg-card p-6">
+              <h3 className="font-semibold text-lg mb-6">Patient Satisfaction Breakdown</h3>
+              <div className="space-y-4">
+                <div>
+                  <div className="flex justify-between text-xs mb-1"><span className="font-medium">5 Stars</span><span>85%</span></div>
+                  <div className="h-2 w-full bg-border rounded-full overflow-hidden"><div className="h-full bg-emerald-500 w-[85%]"></div></div>
+                </div>
+                <div>
+                  <div className="flex justify-between text-xs mb-1"><span className="font-medium">4 Stars</span><span>12%</span></div>
+                  <div className="h-2 w-full bg-border rounded-full overflow-hidden"><div className="h-full bg-emerald-400 w-[12%]"></div></div>
+                </div>
+                <div>
+                  <div className="flex justify-between text-xs mb-1"><span className="font-medium">3 Stars</span><span>3%</span></div>
+                  <div className="h-2 w-full bg-border rounded-full overflow-hidden"><div className="h-full bg-amber-500 w-[3%]"></div></div>
+                </div>
+                <div>
+                  <div className="flex justify-between text-xs mb-1"><span className="font-medium">{"< 3 Stars"}</span><span>0%</span></div>
+                  <div className="h-2 w-full bg-border rounded-full overflow-hidden"><div className="h-full bg-rose-500 w-[0%]"></div></div>
+                </div>
+              </div>
+            </div>
+
+            <div className="rounded-3xl border border-border bg-card p-6">
+              <h3 className="font-semibold text-lg mb-6">Weekly Consultations Trend</h3>
+              <div className="flex h-36 items-end gap-3 px-2 mt-4">
+                {[12, 18, 15, 22, 28, 20, 32].map((h, i) => (
+                  <div key={i} className="group relative w-full flex flex-col items-center justify-end h-full">
+                    <div className="absolute -top-6 text-[10px] opacity-0 group-hover:opacity-100 transition-opacity whitespace-nowrap bg-card border border-border px-1.5 py-0.5 rounded">
+                      {h} visits
+                    </div>
+                    <div className="w-full bg-blue-500/30 rounded-t-sm hover:bg-blue-500 transition-colors" style={{ height: `${(h / 32) * 100}%` }} />
+                  </div>
+                ))}
+              </div>
+              <div className="flex justify-between text-xs text-muted-foreground mt-4 px-2">
+                <span>6 Weeks Ago</span>
+                <span>This Week</span>
+              </div>
+            </div>
+          </div>
+        </div>
+      )}
+
+      {activeTab === "ai" && (
+        <div className="space-y-6 animate-in fade-in slide-in-from-bottom-2 duration-300">
+          <div className="flex items-center justify-between">
+            <div>
+              <h2 className="text-2xl font-bold tracking-tight mb-2">TenaHub AI Consultant</h2>
+              <p className="text-sm text-muted-foreground mb-6">Ask for differential diagnoses, medication interactions, or patient triage advice.</p>
+            </div>
+            <div className="hidden md:flex h-12 w-12 items-center justify-center rounded-2xl bg-primary/10 text-primary">
+              <Bot className="h-6 w-6" />
+            </div>
+          </div>
+
+          <div className="rounded-3xl border border-border bg-card overflow-hidden flex flex-col h-[60vh] min-h-[400px]">
+            {/* Chat History Area */}
+            <div className="flex-1 overflow-y-auto p-6 space-y-6">
+              <div className="flex gap-4">
+                <div className="flex h-8 w-8 shrink-0 items-center justify-center rounded-full bg-primary/20 text-primary">
+                  <Bot className="h-4 w-4" />
+                </div>
+                <div className="rounded-2xl bg-white/5 border border-white/10 px-4 py-3 text-sm max-w-[80%] leading-relaxed text-foreground">
+                  Hello Dr. Selamawit. I'm your secure clinical AI assistant. You can ask me about medication protocols, latest cardiology guidelines, or review anonymized patient symptoms. How can I assist you today?
+                </div>
+              </div>
+              <div className="flex gap-4 flex-row-reverse">
+                <div className="flex h-8 w-8 shrink-0 items-center justify-center rounded-full bg-emerald-500/20 text-emerald-500">
+                  <User className="h-4 w-4" />
+                </div>
+                <div className="rounded-2xl bg-primary px-4 py-3 text-sm max-w-[80%] leading-relaxed text-primary-foreground">
+                  What are the updated guidelines for initiating ACE inhibitors in patients with stage 2 hypertension and a history of asthma?
+                </div>
+              </div>
+              <div className="flex gap-4">
+                <div className="flex h-8 w-8 shrink-0 items-center justify-center rounded-full bg-primary/20 text-primary">
+                  <Bot className="h-4 w-4" />
+                </div>
+                <div className="rounded-2xl bg-white/5 border border-white/10 px-4 py-3 text-sm max-w-[80%] leading-relaxed text-foreground space-y-3">
+                  <p>Based on the latest clinical guidelines (ACC/AHA 2024 update):</p>
+                  <ul className="list-disc pl-4 space-y-1">
+                    <li>ACE inhibitors are generally first-line therapy for Stage 2 HTN.</li>
+                    <li>However, in patients with asthma, ARBs (Angiotensin II Receptor Blockers) such as Losartan or Valsartan are often preferred over ACE inhibitors due to the lower risk of inducing a persistent cough or exacerbating asthma symptoms (bradykinin accumulation).</li>
+                  </ul>
+                  <p className="text-xs text-muted-foreground mt-2 italic">Source: Clinical Knowledge Base v4.1</p>
+                </div>
+              </div>
+            </div>
+
+            {/* Input Area */}
+            <div className="p-4 border-t border-border bg-card flex gap-3 items-center">
+              <input 
+                type="text" 
+                placeholder="Ask clinical queries..." 
+                className="flex-1 bg-background border border-input rounded-full px-4 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-primary/50"
+              />
+              <Button size="icon" className="rounded-full shrink-0" onClick={() => toast.success("AI Query Submitted!")}>
+                <Send className="h-4 w-4 ml-0.5" />
+              </Button>
+            </div>
           </div>
         </div>
       )}

@@ -2,7 +2,8 @@ import { useState } from "react";
 import { toast } from "sonner";
 import {
   Shield, Users, Building2, Activity, AlertTriangle, CheckCircle2,
-  XCircle, TrendingUp, Search, LayoutDashboard, User, Settings, PieChart, X
+  XCircle, TrendingUp, Search, LayoutDashboard, User, Settings, PieChart, X,
+  Layers, Plus, Globe, Download, FileText
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -17,16 +18,18 @@ const initialPartners = [
   { id: 4, name: "Bethel Cardio Tracker", category: "Cardiology", users: 0, status: "pending" as PartnerStatus, apiUsage: "0 calls/mo", contact: "admin@bethel.com" },
 ];
 
-const professionals = [
-  { id: 1, name: "Dr. Selamawit Tadesse", specialty: "General Medicine", rating: "4.9", verified: true, license: "MED-2014-8892", patients: 142 },
-  { id: 2, name: "Ato Yonas Mekuria", specialty: "Physiotherapy", rating: "4.7", verified: true, license: "PHY-2018-334", patients: 86 },
-  { id: 3, name: "Dr. Aster Mekonnen", specialty: "Cardiology", rating: "-", verified: false, license: "MED-2022-110", patients: 0 },
+const initialProfessionals = [
+  { id: 1, name: "Dr. Selamawit Tadesse", specialty: "General Medicine", rating: "4.9", verified: true, license: "MED-2014-8892", patients: 142, clinic: "Addis Hospital", experience: "15 Years" },
+  { id: 2, name: "Ato Yonas Mekuria", specialty: "Physiotherapy", rating: "4.7", verified: true, license: "PHY-2018-334", patients: 86, clinic: "Kazanchis Rehab", experience: "8 Years" },
+  { id: 3, name: "Dr. Aster Mekonnen", specialty: "Cardiology", rating: "-", verified: false, license: "MED-2022-110", patients: 0, clinic: "Bethel Heart Clinic", experience: "12 Years" },
+  { id: 4, name: "Dr. Dawit Alemu", specialty: "Cardiology", rating: "5.0", verified: true, license: "MED-2011-002", patients: 320, clinic: "Bethel Heart Clinic", experience: "20 Years" },
 ];
 
 const allUsersList = [
-  { id: 1, name: "Dawit Alemu", email: "dawit@example.com", role: "User", joined: "2 weeks ago", activeModules: ["Heart Tracker", "Step Counter"] },
-  { id: 2, name: "Hanna Bekele", email: "hanna@example.com", role: "User", joined: "1 month ago", activeModules: ["Mental Health Journal"] },
-  { id: 3, name: "Marta Girma", email: "marta@example.com", role: "User", joined: "3 months ago", activeModules: [] },
+  { id: 1, name: "Dawit Alemu", email: "dawit@example.com", role: "User", joined: "2 weeks ago", activeModules: ["Heart Tracker", "Step Counter"], location: "Addis Ababa" },
+  { id: 2, name: "Hanna Bekele", email: "hanna@example.com", role: "User", joined: "1 month ago", activeModules: ["Mental Health Journal"], location: "Dire Dawa" },
+  { id: 3, name: "Marta Girma", email: "marta@example.com", role: "User", joined: "3 months ago", activeModules: [], location: "Hawassa" },
+  { id: 4, name: "Solomon Kebede", email: "solomon@example.com", role: "User", joined: "6 months ago", activeModules: ["Physio Hub"], location: "Addis Ababa" },
 ];
 
 const incidents = [
@@ -36,19 +39,66 @@ const incidents = [
 
 const sparkline = [22, 30, 28, 41, 38, 52, 47, 60, 58, 71, 68, 80];
 
-type AdminTab = "dashboard" | "users" | "organizers" | "professionals" | "analytics" | "settings";
+type AdminTab = "dashboard" | "users" | "organizers" | "professionals" | "miniapps" | "analytics" | "settings";
 
 export function SuperAdminConsole() {
   const [activeTab, setActiveTab] = useState<AdminTab>("dashboard");
   const [partners, setPartners] = useState(initialPartners);
   const [filter, setFilter] = useState("");
   
+  // Marketplace / Mini Apps State
+  const [marketplace, setMarketplace] = useState<any[]>(() => {
+    if (typeof window !== "undefined") {
+      const stored = localStorage.getItem("tenahub_marketplace");
+      if (stored) {
+        try { return JSON.parse(stored); } catch (e) {}
+      }
+    }
+    return [
+      { id: "yenehealth", name: "YeneHealth", tagline: "Maternal & Postpartum Care", category: "Maternal Health" },
+    ];
+  });
+  
+  // Add Mini App State
+  const [showAddMiniApp, setShowAddMiniApp] = useState(false);
+  const [newAppName, setNewAppName] = useState("");
+  const [newAppTagline, setNewAppTagline] = useState("");
+  const [newAppCategory, setNewAppCategory] = useState("General Wellness");
+  const [newAppDeveloper, setNewAppDeveloper] = useState("");
+
   // Modal State
   const [modalData, setModalData] = useState<{ title: string, data: any } | null>(null);
 
   const setStatus = (id: number, status: PartnerStatus, label: string) => {
     setPartners((p) => p.map((x) => (x.id === id ? { ...x, status } : x)));
     toast.success(label);
+  };
+
+  const handleAddMiniApp = (e: React.FormEvent) => {
+    e.preventDefault();
+    if (!newAppName || !newAppTagline || !newAppDeveloper) {
+      toast.error("Please fill in all mini-app details.");
+      return;
+    }
+    const newApp = {
+      id: "app_" + Date.now(),
+      name: newAppName,
+      tagline: newAppTagline,
+      category: newAppCategory,
+      developer: newAppDeveloper,
+      status: "Active",
+      dateAdded: new Date().toLocaleDateString()
+    };
+    const updated = [...marketplace, newApp];
+    setMarketplace(updated);
+    if (typeof window !== "undefined") {
+      localStorage.setItem("tenahub_marketplace", JSON.stringify(updated));
+    }
+    setShowAddMiniApp(false);
+    setNewAppName("");
+    setNewAppTagline("");
+    setNewAppDeveloper("");
+    toast.success("Mini App Added to Marketplace!");
   };
 
   const visiblePartners = partners.filter((p) =>
@@ -58,44 +108,95 @@ export function SuperAdminConsole() {
   return (
     <div className="flex flex-col md:flex-row gap-6 min-h-[70vh] relative">
       
-      {/* Modal Overlay */}
+      {/* Modal Overlay for Details */}
       {modalData && (
         <div className="fixed inset-0 z-50 flex items-center justify-center bg-background/80 backdrop-blur-sm p-4">
-          <div className="w-full max-w-lg rounded-3xl border border-white/20 bg-card p-6 shadow-xl relative animate-in fade-in zoom-in-95 duration-200">
+          <div className="w-full max-w-3xl rounded-3xl border border-border bg-card p-6 shadow-xl relative animate-in fade-in zoom-in-95 duration-200 max-h-[90vh] overflow-y-auto">
             <button 
               onClick={() => setModalData(null)} 
               className="absolute right-4 top-4 rounded-full p-1 text-muted-foreground hover:bg-accent hover:text-foreground transition-colors"
             >
               <X className="h-5 w-5" />
             </button>
-            <h3 className="text-xl font-bold mb-4">{modalData.title}</h3>
-            <div className="space-y-4">
-              {Object.entries(modalData.data).map(([key, value]) => (
-                <div key={key} className="flex justify-between border-b border-border pb-2">
-                  <span className="text-sm font-medium text-muted-foreground capitalize">{key.replace(/([A-Z])/g, ' $1').trim()}</span>
-                  <span className="text-sm font-semibold">{Array.isArray(value) ? value.join(", ") || "None" : String(value)}</span>
-                </div>
-              ))}
+            <h3 className="text-xl font-bold mb-6 border-b border-border pb-4">{modalData.title}</h3>
+            
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-x-6 gap-y-4">
+              {Object.entries(modalData.data).map(([key, value]) => {
+                if (key === "Icon" || key === "accent") return null;
+                return (
+                  <div key={key} className="flex flex-col border-b border-border pb-2 bg-white/5 rounded-lg p-3">
+                    <span className="text-xs font-bold text-muted-foreground uppercase tracking-wider mb-1">{key.replace(/([A-Z])/g, ' $1').trim()}</span>
+                    <span className="text-sm font-semibold text-foreground/90">{Array.isArray(value) ? value.join(", ") || "None" : String(value)}</span>
+                  </div>
+                );
+              })}
             </div>
-            <div className="mt-6 flex justify-end gap-2">
-              <Button variant="outline" onClick={() => setModalData(null)}>Close</Button>
-              <Button onClick={() => { toast.success("Action taken"); setModalData(null); }}>Manage</Button>
+            
+            <div className="mt-8 flex justify-end gap-3 pt-4 border-t border-border">
+              <Button variant="outline" onClick={() => setModalData(null)}>Close Window</Button>
+              <Button onClick={() => { toast.success("Action logged."); setModalData(null); }}>Manage Entity</Button>
             </div>
           </div>
         </div>
       )}
 
-      {/* Sidebar Navigation */}
-      <aside className="w-full md:w-64 shrink-0 rounded-[2rem] glass-tint p-4 space-y-1 h-fit">
-        <div className="px-3 py-2 mb-2">
-          <div className="inline-flex items-center gap-1.5 rounded-full bg-white/15 px-3 py-1 text-[10px] font-medium uppercase tracking-widest ring-1 ring-white/20 backdrop-blur text-primary-foreground">
-            <Shield className="h-3 w-3" /> Admin
+      {/* Add Mini App Modal */}
+      {showAddMiniApp && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center bg-background/80 backdrop-blur-sm p-4">
+          <div className="w-full max-w-md rounded-3xl border border-border bg-card p-6 shadow-xl relative animate-in fade-in zoom-in-95 duration-200">
+            <button 
+              onClick={() => setShowAddMiniApp(false)} 
+              className="absolute right-4 top-4 rounded-full p-1 text-muted-foreground hover:bg-accent hover:text-foreground transition-colors"
+            >
+              <X className="h-5 w-5" />
+            </button>
+            <h3 className="text-xl font-bold mb-4">Add New Mini App</h3>
+            <form onSubmit={handleAddMiniApp} className="space-y-4">
+              <div>
+                <label className="text-sm font-medium">App Name</label>
+                <Input value={newAppName} onChange={(e) => setNewAppName(e.target.value)} placeholder="e.g. HealthTracker" />
+              </div>
+              <div>
+                <label className="text-sm font-medium">Developer / Company</label>
+                <Input value={newAppDeveloper} onChange={(e) => setNewAppDeveloper(e.target.value)} placeholder="e.g. TenaHub Labs" />
+              </div>
+              <div>
+                <label className="text-sm font-medium">Category</label>
+                <select 
+                  className="w-full rounded-md border border-input bg-background px-3 py-2 text-sm"
+                  value={newAppCategory} onChange={(e) => setNewAppCategory(e.target.value)}
+                >
+                  <option>Mental Health</option>
+                  <option>Maternal Health</option>
+                  <option>Physical Therapy</option>
+                  <option>General Wellness</option>
+                </select>
+              </div>
+              <div>
+                <label className="text-sm font-medium">Tagline</label>
+                <Input value={newAppTagline} onChange={(e) => setNewAppTagline(e.target.value)} placeholder="Short description" />
+              </div>
+              <div className="flex justify-end gap-2 pt-2 border-t border-border mt-4">
+                <Button type="button" variant="outline" onClick={() => setShowAddMiniApp(false)}>Cancel</Button>
+                <Button type="submit">Publish App</Button>
+              </div>
+            </form>
           </div>
         </div>
+      )}
+
+      {/* Sidebar Navigation */}
+      <aside className="w-full md:w-64 shrink-0 bg-card border border-border p-4 space-y-1 h-fit rounded-3xl">
+        <div className="px-3 py-2 mb-2 flex items-center gap-2">
+          <Shield className="h-5 w-5 text-primary" />
+          <span className="font-bold text-lg tracking-tight">Super Admin</span>
+        </div>
+        <div className="h-px bg-border my-2 mx-3"></div>
         <NavButton active={activeTab === "dashboard"} onClick={() => setActiveTab("dashboard")} icon={LayoutDashboard} label="Dashboard" />
         <NavButton active={activeTab === "users"} onClick={() => setActiveTab("users")} icon={Users} label="Users" />
         <NavButton active={activeTab === "organizers"} onClick={() => setActiveTab("organizers")} icon={Building2} label="Listed Businesses" />
         <NavButton active={activeTab === "professionals"} onClick={() => setActiveTab("professionals")} icon={User} label="Professionals" />
+        <NavButton active={activeTab === "miniapps"} onClick={() => setActiveTab("miniapps")} icon={Layers} label="Mini Apps" />
         <NavButton active={activeTab === "analytics"} onClick={() => setActiveTab("analytics")} icon={PieChart} label="Analytics" />
         <NavButton active={activeTab === "settings"} onClick={() => setActiveTab("settings")} icon={Settings} label="Settings" />
       </aside>
@@ -106,7 +207,7 @@ export function SuperAdminConsole() {
         {/* DASHBOARD TAB */}
         {activeTab === "dashboard" && (
           <div className="space-y-6 animate-in fade-in slide-in-from-bottom-2 duration-300">
-            <section className="grid grid-cols-2 gap-3 sm:grid-cols-4">
+            <section className="grid grid-cols-2 gap-4 sm:grid-cols-4">
               <KPI Icon={Users} label="Total Users" value="48.2k" trend="+9.2%" />
               <KPI Icon={Building2} label="Listed Orgs" value="36" trend="+2" />
               <KPI Icon={User} label="Professionals" value="142" trend="+12" />
@@ -114,9 +215,9 @@ export function SuperAdminConsole() {
             </section>
 
             <div className="grid gap-6 lg:grid-cols-2">
-              <section className="rounded-3xl glass-strong p-6">
+              <section className="rounded-3xl bg-card border border-border p-6">
                 <div className="mb-4 flex items-center gap-2">
-                  <div className="flex h-9 w-9 items-center justify-center rounded-xl bg-amber-500/15 text-amber-600">
+                  <div className="flex h-9 w-9 items-center justify-center rounded-xl bg-amber-500/10 text-amber-600">
                     <AlertTriangle className="h-4 w-4" />
                   </div>
                   <div>
@@ -129,7 +230,7 @@ export function SuperAdminConsole() {
                     <li 
                       key={i.id} 
                       onClick={() => setModalData({ title: "Incident Report", data: i })}
-                      className="flex items-start gap-3 rounded-2xl border border-white/50 bg-white/40 p-3 backdrop-blur cursor-pointer hover:bg-white/60 transition"
+                      className="flex items-start gap-3 rounded-2xl border border-border bg-background p-3 cursor-pointer hover:bg-accent/40 transition"
                     >
                       <span className={cn("mt-1 h-2 w-2 shrink-0 rounded-full", i.severity === "med" ? "bg-amber-500" : "bg-emerald-500")} />
                       <div className="min-w-0 flex-1">
@@ -141,7 +242,7 @@ export function SuperAdminConsole() {
                 </ul>
               </section>
 
-              <section className="rounded-3xl glass-strong p-6">
+              <section className="rounded-3xl bg-card border border-border p-6">
                 <div className="mb-4 flex items-center gap-2">
                   <div className="flex h-9 w-9 items-center justify-center rounded-xl bg-primary/10 text-primary">
                     <TrendingUp className="h-4 w-4" />
@@ -151,7 +252,7 @@ export function SuperAdminConsole() {
                     <p className="text-xs text-muted-foreground">New signups last 12 weeks</p>
                   </div>
                 </div>
-                <div className="rounded-2xl border border-white/50 bg-gradient-to-b from-white/40 to-transparent p-4 backdrop-blur cursor-pointer hover:border-white/80 transition" onClick={() => toast.info("Opening detailed analytics report...")}>
+                <div className="rounded-2xl border border-border bg-background p-4 cursor-pointer hover:border-primary/50 transition" onClick={() => toast.info("Opening detailed analytics report...")}>
                   <div className="mb-3 flex items-baseline justify-between">
                     <div>
                       <div className="text-3xl font-bold tracking-tight">+1,284</div>
@@ -160,7 +261,7 @@ export function SuperAdminConsole() {
                   </div>
                   <div className="flex h-32 items-end gap-1.5">
                     {sparkline.map((v, i) => (
-                      <div key={i} className="flex-1 rounded-t-md bg-gradient-to-t from-primary to-emerald-400 opacity-80 transition hover:opacity-100" style={{ height: `${(v / 90) * 100}%` }} />
+                      <div key={i} className="flex-1 rounded-t-md bg-gradient-to-t from-primary/50 to-primary/20 opacity-80 transition hover:opacity-100" style={{ height: `${(v / 90) * 100}%` }} />
                     ))}
                   </div>
                 </div>
@@ -172,7 +273,7 @@ export function SuperAdminConsole() {
         {/* ORGANIZERS TAB */}
         {activeTab === "organizers" && (
           <div className="space-y-6 animate-in fade-in slide-in-from-bottom-2 duration-300">
-            <section className="rounded-3xl glass-strong p-6">
+            <section className="rounded-3xl bg-card border border-border p-6">
               <div className="mb-6 flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
                 <div>
                   <h2 className="text-xl font-bold">Listed Businesses</h2>
@@ -184,7 +285,7 @@ export function SuperAdminConsole() {
                     value={filter}
                     onChange={(e) => setFilter(e.target.value)}
                     placeholder="Search businesses..."
-                    className="border-white/50 bg-white/50 pl-9 backdrop-blur"
+                    className="pl-9"
                   />
                 </div>
               </div>
@@ -194,7 +295,7 @@ export function SuperAdminConsole() {
                   <div 
                     key={p.id} 
                     onClick={() => setModalData({ title: "Business Integration Details", data: p })}
-                    className="flex flex-col gap-3 rounded-2xl border border-white/50 bg-white/40 p-4 backdrop-blur transition hover:bg-white/60 cursor-pointer sm:flex-row sm:items-center sm:justify-between"
+                    className="flex flex-col gap-3 rounded-2xl border border-border bg-background p-4 transition hover:bg-accent/40 cursor-pointer sm:flex-row sm:items-center sm:justify-between"
                   >
                     <div className="flex items-center gap-3">
                       <div className="flex h-12 w-12 items-center justify-center rounded-xl bg-primary/10 text-primary">
@@ -224,36 +325,36 @@ export function SuperAdminConsole() {
         {/* PROFESSIONALS TAB */}
         {activeTab === "professionals" && (
           <div className="space-y-6 animate-in fade-in slide-in-from-bottom-2 duration-300">
-            <section className="rounded-3xl glass-strong p-6">
-              <div className="mb-6">
-                <h2 className="text-xl font-bold">Professional Directory</h2>
-                <p className="text-sm text-muted-foreground">Click a professional to view their credentials.</p>
+            <section className="rounded-3xl bg-card border border-border p-6">
+              <div className="mb-6 flex justify-between items-center">
+                <div>
+                  <h2 className="text-xl font-bold">Professional Directory</h2>
+                  <p className="text-sm text-muted-foreground">List of all healthcare professionals on the platform.</p>
+                </div>
               </div>
 
-              <div className="grid gap-4 sm:grid-cols-2">
-                {professionals.map(p => (
+              <div className="flex flex-col space-y-3">
+                {initialProfessionals.map(p => (
                   <div 
                     key={p.id} 
-                    onClick={() => setModalData({ title: "Professional Credentials", data: p })}
-                    className="rounded-2xl border border-white/50 bg-white/40 p-4 backdrop-blur cursor-pointer hover:bg-white/60 transition"
+                    onClick={() => setModalData({ title: "Professional Profile", data: p })}
+                    className="rounded-2xl border border-border bg-background p-4 cursor-pointer hover:bg-accent/40 transition flex items-center justify-between"
                   >
-                    <div className="flex items-start justify-between">
-                      <div className="flex items-center gap-3">
-                        <div className="flex h-10 w-10 items-center justify-center rounded-full bg-primary/10 text-primary font-bold">
-                          {p.name.charAt(0)}{p.name.charAt(4)}
-                        </div>
-                        <div>
-                          <div className="font-semibold">{p.name}</div>
-                          <div className="text-xs text-muted-foreground">{p.specialty}</div>
-                        </div>
+                    <div className="flex items-center gap-4">
+                      <div className="flex h-12 w-12 items-center justify-center rounded-full bg-primary/10 text-primary font-bold">
+                        {p.name.charAt(0)}{p.name.charAt(4)}
                       </div>
-                      <div onClick={(e) => e.stopPropagation()}>
-                        {p.verified ? (
-                          <span className="inline-flex items-center gap-1 text-xs font-medium text-emerald-600 bg-emerald-500/10 px-2 py-1 rounded-full"><CheckCircle2 className="h-3 w-3"/> Verified</span>
-                        ) : (
-                          <Button size="sm" variant="secondary" className="h-7 text-xs" onClick={() => toast.success(`${p.name} verified`)}>Verify</Button>
-                        )}
+                      <div>
+                        <div className="font-semibold text-base flex items-center gap-2">
+                          {p.name}
+                          {p.verified && <CheckCircle2 className="h-4 w-4 text-emerald-500" />}
+                        </div>
+                        <div className="text-sm text-muted-foreground">{p.specialty} · {p.clinic}</div>
                       </div>
+                    </div>
+                    <div className="text-right hidden sm:block">
+                      <div className="text-sm font-medium">{p.patients} Patients</div>
+                      <div className="text-xs text-muted-foreground">Rating: {p.rating}</div>
                     </div>
                   </div>
                 ))}
@@ -265,26 +366,26 @@ export function SuperAdminConsole() {
         {/* USERS TAB */}
         {activeTab === "users" && (
           <div className="space-y-6 animate-in fade-in slide-in-from-bottom-2 duration-300">
-            <section className="rounded-3xl glass-strong p-6">
+            <section className="rounded-3xl bg-card border border-border p-6">
               <div className="mb-6">
                 <h2 className="text-xl font-bold">User Management</h2>
                 <p className="text-sm text-muted-foreground">Click a user to view their account and connected modules.</p>
               </div>
-              <div className="overflow-hidden rounded-2xl border border-white/50">
+              <div className="overflow-hidden rounded-2xl border border-border">
                 <table className="w-full text-sm">
-                  <thead className="bg-white/40 backdrop-blur text-xs uppercase tracking-wide text-muted-foreground">
+                  <thead className="bg-muted text-xs uppercase tracking-wide text-muted-foreground">
                     <tr>
                       <th className="px-4 py-3 text-left">Name</th>
                       <th className="px-4 py-3 text-left">Email</th>
                       <th className="px-4 py-3 text-left">Joined</th>
                     </tr>
                   </thead>
-                  <tbody>
+                  <tbody className="divide-y divide-border">
                     {allUsersList.map((u, i) => (
                       <tr 
                         key={u.id} 
                         onClick={() => setModalData({ title: "User Profile Overview", data: u })}
-                        className={cn("cursor-pointer hover:bg-white/40 transition", i % 2 ? "bg-white/20" : "")}
+                        className={cn("cursor-pointer hover:bg-accent/40 transition", i % 2 ? "bg-background" : "bg-card")}
                       >
                         <td className="px-4 py-3 font-medium">{u.name}</td>
                         <td className="px-4 py-3 text-muted-foreground">{u.email}</td>
@@ -298,21 +399,112 @@ export function SuperAdminConsole() {
           </div>
         )}
 
+        {/* MINI APPS TAB */}
+        {activeTab === "miniapps" && (
+          <div className="space-y-6 animate-in fade-in slide-in-from-bottom-2 duration-300">
+            <section className="rounded-3xl bg-card border border-border p-6">
+              <div className="mb-6 flex justify-between items-center">
+                <div>
+                  <h2 className="text-xl font-bold">Marketplace Modules</h2>
+                  <p className="text-sm text-muted-foreground">View and add verified mini-apps.</p>
+                </div>
+                <Button onClick={() => setShowAddMiniApp(true)}><Plus className="h-4 w-4 mr-1"/> Add App</Button>
+              </div>
+              <div className="grid gap-4 sm:grid-cols-2">
+                {marketplace.map((m, i) => (
+                  <div key={i} onClick={() => setModalData({ title: "Mini App Details", data: m })} className="p-4 border border-border rounded-2xl bg-background hover:bg-accent/40 cursor-pointer transition">
+                    <div className="flex justify-between">
+                      <div className="font-semibold text-lg">{m.name}</div>
+                      <Layers className="h-5 w-5 text-primary" />
+                    </div>
+                    <div className="text-sm text-muted-foreground mt-1">{m.category}</div>
+                    <p className="text-sm mt-3">{m.tagline}</p>
+                    {m.developer && <div className="text-xs text-muted-foreground mt-2">By {m.developer}</div>}
+                  </div>
+                ))}
+              </div>
+            </section>
+          </div>
+        )}
+
         {/* ANALYTICS TAB */}
         {activeTab === "analytics" && (
           <div className="space-y-6 animate-in fade-in slide-in-from-bottom-2 duration-300">
-            <section className="rounded-3xl glass-strong p-6 flex flex-col items-center justify-center text-center py-20 cursor-pointer hover:bg-white/10 transition" onClick={() => toast.info("Exporting CSV report...")}>
-              <PieChart className="h-12 w-12 text-primary/40 mb-4" />
-              <h2 className="text-xl font-bold mb-2">Advanced Analytics</h2>
-              <p className="text-muted-foreground max-w-sm">Click to export comprehensive CSV reports on user engagement and business listings.</p>
-            </section>
+            <div className="flex justify-between items-center mb-2">
+              <div>
+                <h2 className="text-2xl font-bold tracking-tight">System Analytics</h2>
+                <p className="text-sm text-muted-foreground mt-1">Platform-wide usage and performance data.</p>
+              </div>
+              <Button variant="outline"><FileText className="mr-2 h-4 w-4" /> Export Report</Button>
+            </div>
+
+            <div className="grid md:grid-cols-2 gap-6">
+              {/* Traffic Overview */}
+              <div className="rounded-3xl border border-border bg-card p-6">
+                <h3 className="font-semibold text-lg mb-6">Daily Active Users (DAU)</h3>
+                <div className="flex h-48 items-end gap-2 px-2 mt-4">
+                  {[25, 45, 60, 50, 80, 75, 90, 85, 100, 95].map((h, i) => (
+                    <div key={i} className="group relative w-full flex flex-col items-center justify-end h-full">
+                      <div className="absolute -top-6 text-[10px] opacity-0 group-hover:opacity-100 transition-opacity whitespace-nowrap bg-background border border-border px-1.5 py-0.5 rounded shadow">
+                        {h}k
+                      </div>
+                      <div className="w-full bg-blue-500/20 rounded-t-sm hover:bg-blue-500 transition-colors" style={{ height: `${h}%` }} />
+                    </div>
+                  ))}
+                </div>
+                <div className="flex justify-between text-xs text-muted-foreground mt-4 px-2">
+                  <span>10 Days Ago</span>
+                  <span>Today</span>
+                </div>
+              </div>
+
+              {/* Module Usage */}
+              <div className="rounded-3xl border border-border bg-card p-6">
+                <h3 className="font-semibold text-lg mb-6">Mini-App Popularity</h3>
+                <div className="space-y-4">
+                  <div>
+                    <div className="flex justify-between text-xs mb-1"><span className="font-medium">Maternal Health (YeneHealth)</span><span>45%</span></div>
+                    <div className="h-2 w-full bg-border rounded-full overflow-hidden"><div className="h-full bg-rose-500 w-[45%]"></div></div>
+                  </div>
+                  <div>
+                    <div className="flex justify-between text-xs mb-1"><span className="font-medium">Mental Wellness (Zema)</span><span>30%</span></div>
+                    <div className="h-2 w-full bg-border rounded-full overflow-hidden"><div className="h-full bg-indigo-500 w-[30%]"></div></div>
+                  </div>
+                  <div>
+                    <div className="flex justify-between text-xs mb-1"><span className="font-medium">Physiotherapy Hub</span><span>15%</span></div>
+                    <div className="h-2 w-full bg-border rounded-full overflow-hidden"><div className="h-full bg-emerald-500 w-[15%]"></div></div>
+                  </div>
+                  <div>
+                    <div className="flex justify-between text-xs mb-1"><span className="font-medium">Other Modules</span><span>10%</span></div>
+                    <div className="h-2 w-full bg-border rounded-full overflow-hidden"><div className="h-full bg-amber-500 w-[10%]"></div></div>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <div className="rounded-3xl border border-border bg-card p-6 flex flex-col md:flex-row items-center gap-8">
+              <div className="flex-1">
+                <h3 className="font-semibold text-lg mb-2">API Call Distribution</h3>
+                <p className="text-sm text-muted-foreground">Most API traffic originates from profile synchronization and third-party integrations.</p>
+              </div>
+              <div className="h-40 w-40 rounded-full shadow-inner border-4 border-border shrink-0"
+                style={{
+                  background: "conic-gradient(from 0deg, #3b82f6 0% 50%, #10b981 50% 80%, #f59e0b 80% 100%)"
+                }}
+              />
+              <div className="flex-1 space-y-2">
+                <div className="flex items-center gap-2 text-sm"><div className="w-3 h-3 rounded-full bg-blue-500"/> Data Sync (50%)</div>
+                <div className="flex items-center gap-2 text-sm"><div className="w-3 h-3 rounded-full bg-emerald-500"/> Partner Webhooks (30%)</div>
+                <div className="flex items-center gap-2 text-sm"><div className="w-3 h-3 rounded-full bg-amber-500"/> Authentication (20%)</div>
+              </div>
+            </div>
           </div>
         )}
 
         {/* SETTINGS TAB */}
         {activeTab === "settings" && (
           <div className="space-y-6 animate-in fade-in slide-in-from-bottom-2 duration-300">
-            <section className="rounded-3xl glass-strong p-6">
+            <section className="rounded-3xl bg-card border border-border p-6">
               <h2 className="text-xl font-bold mb-6">Platform Settings</h2>
               <div className="space-y-4 max-w-lg">
                 <div>
@@ -323,7 +515,7 @@ export function SuperAdminConsole() {
                   <label className="text-sm font-medium">Support Email</label>
                   <Input defaultValue="support@tenagulecha.com" className="mt-1" />
                 </div>
-                <div className="pt-4 border-t border-white/20 flex gap-2">
+                <div className="pt-4 border-t border-border flex gap-2">
                   <Button onClick={() => toast.success("Settings saved successfully")}>Save Changes</Button>
                   <Button variant="destructive" onClick={() => toast.warning("Maintenance mode initiated")}>Enable Maintenance Mode</Button>
                 </div>
@@ -342,10 +534,10 @@ function NavButton({ active, onClick, icon: Icon, label }: { active: boolean; on
     <button
       onClick={onClick}
       className={cn(
-        "w-full flex items-center gap-3 px-3 py-2.5 rounded-xl text-sm font-medium transition-all",
+        "w-full flex items-center gap-3 px-4 py-3 rounded-xl text-sm font-medium transition-all",
         active 
           ? "bg-primary text-primary-foreground shadow-md" 
-          : "text-primary-foreground/70 hover:bg-white/10 hover:text-primary-foreground"
+          : "text-muted-foreground hover:bg-accent hover:text-foreground"
       )}
     >
       <Icon className="h-4 w-4" />
@@ -356,10 +548,10 @@ function NavButton({ active, onClick, icon: Icon, label }: { active: boolean; on
 
 function KPI({ Icon, label, value, trend }: { Icon: any; label: string; value: string; trend: string }) {
   return (
-    <div className="rounded-2xl glass p-4 hover:border-white/80 transition cursor-pointer" onClick={() => toast.info(`Viewing detailed chart for ${label}`)}>
+    <div className="rounded-2xl bg-card border border-border p-4 hover:border-primary/50 transition cursor-pointer" onClick={() => toast.info(`Viewing detailed chart for ${label}`)}>
       <div className="flex items-center justify-between">
         <Icon className="h-4 w-4 text-primary" />
-        <span className="text-[10px] font-medium text-emerald-600">{trend}</span>
+        <span className={cn("text-[10px] font-medium", trend.includes("+") ? "text-emerald-500" : "text-muted-foreground")}>{trend}</span>
       </div>
       <div className="mt-2 text-xl font-bold tracking-tight">{value}</div>
       <div className="text-[11px] text-muted-foreground">{label}</div>
@@ -369,12 +561,12 @@ function KPI({ Icon, label, value, trend }: { Icon: any; label: string; value: s
 
 function StatusBadge({ status }: { status: PartnerStatus }) {
   const map = {
-    approved: { Icon: CheckCircle2, cls: "bg-emerald-500/15 text-emerald-700 ring-emerald-500/20", label: "Approved" },
-    pending: { Icon: AlertTriangle, cls: "bg-amber-500/15 text-amber-700 ring-amber-500/20", label: "Pending" },
-    suspended: { Icon: XCircle, cls: "bg-rose-500/15 text-rose-700 ring-rose-500/20", label: "Suspended" },
+    approved: { Icon: CheckCircle2, cls: "bg-emerald-500/10 text-emerald-600 border border-emerald-500/20", label: "Approved" },
+    pending: { Icon: AlertTriangle, cls: "bg-amber-500/10 text-amber-600 border border-amber-500/20", label: "Pending" },
+    suspended: { Icon: XCircle, cls: "bg-rose-500/10 text-rose-600 border border-rose-500/20", label: "Suspended" },
   }[status];
   return (
-    <span className={cn("inline-flex items-center gap-1 rounded-full px-2 py-0.5 text-[10px] font-medium ring-1", map.cls)}>
+    <span className={cn("inline-flex items-center gap-1 rounded-full px-2 py-0.5 text-[10px] font-medium", map.cls)}>
       <map.Icon className="h-3 w-3" /> {map.label}
     </span>
   );
