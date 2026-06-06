@@ -65,6 +65,7 @@ export function SuperAdminConsole() {
   const [newAppTagline, setNewAppTagline] = useState("");
   const [newAppCategory, setNewAppCategory] = useState("General Wellness");
   const [newAppDeveloper, setNewAppDeveloper] = useState("");
+  const [newAppUrl, setNewAppUrl] = useState("");
 
   // Modal State
   const [modalData, setModalData] = useState<{ title: string, data: any } | null>(null);
@@ -86,6 +87,7 @@ export function SuperAdminConsole() {
       tagline: newAppTagline,
       category: newAppCategory,
       developer: newAppDeveloper,
+      url: newAppUrl,
       status: "Active",
       dateAdded: new Date().toLocaleDateString()
     };
@@ -175,6 +177,10 @@ export function SuperAdminConsole() {
               <div>
                 <label className="text-sm font-medium">Tagline</label>
                 <Input value={newAppTagline} onChange={(e) => setNewAppTagline(e.target.value)} placeholder="Short description" />
+              </div>
+              <div>
+                <label className="text-sm font-medium">App URL / Link</label>
+                <Input value={newAppUrl} onChange={(e) => setNewAppUrl(e.target.value)} placeholder="https://..." />
               </div>
               <div className="flex justify-end gap-2 pt-2 border-t border-border mt-4">
                 <Button type="button" variant="outline" onClick={() => setShowAddMiniApp(false)}>Cancel</Button>
@@ -517,40 +523,31 @@ export function SuperAdminConsole() {
                 </div>
               </div>
               <div className="space-y-4">
-                {/* Mock data for pending submissions */}
-                <div className="p-4 border border-border rounded-2xl bg-background flex flex-col sm:flex-row gap-4 items-start sm:items-center justify-between">
-                  <div className="flex items-center gap-4">
-                    <div className="flex h-12 w-12 items-center justify-center rounded-xl bg-primary/10 text-primary">
-                      <Layers className="h-6 w-6" />
+                {[
+                  { name: "MyCalm Meditation", developer: "Wellness Labs Ltd.", category: "Mental Health", tagline: "Daily guided mindfulness and mental resilience.", features: ["Guided Meditation", "Mood Tracking"], pricing: "Free" },
+                  { name: "NutriPlan Pro", developer: "Healthy Life Inc.", category: "Fitness & Nutrition", tagline: "Custom diet tracking for chronic diseases.", features: ["Diet Planning", "Calorie Counter"], pricing: "Premium 100 ETB/mo" }
+                ].map((sub, i) => (
+                  <div 
+                    key={i}
+                    onClick={() => setModalData({ title: "Submission Details", data: sub })}
+                    className="p-4 border border-border rounded-2xl bg-background flex flex-col sm:flex-row gap-4 items-start sm:items-center justify-between cursor-pointer hover:border-primary/50 transition"
+                  >
+                    <div className="flex items-center gap-4">
+                      <div className="flex h-12 w-12 items-center justify-center rounded-xl bg-primary/10 text-primary">
+                        <Layers className="h-6 w-6" />
+                      </div>
+                      <div>
+                        <div className="font-semibold text-lg">{sub.name}</div>
+                        <div className="text-sm text-muted-foreground">{sub.developer} · {sub.category}</div>
+                        <div className="text-xs mt-1 text-foreground/80">"{sub.tagline}"</div>
+                      </div>
                     </div>
-                    <div>
-                      <div className="font-semibold text-lg">MyCalm Meditation</div>
-                      <div className="text-sm text-muted-foreground">Wellness Labs Ltd. · Mental Health</div>
-                      <div className="text-xs mt-1 text-foreground/80">"Daily guided mindfulness and mental resilience."</div>
-                    </div>
-                  </div>
-                  <div className="flex gap-2">
-                    <Button size="sm" variant="outline" onClick={() => toast.error("Submission rejected.")}>Reject</Button>
-                    <Button size="sm" onClick={() => toast.success("MyCalm Meditation approved and added to marketplace!")}>Approve</Button>
-                  </div>
-                </div>
-                
-                <div className="p-4 border border-border rounded-2xl bg-background flex flex-col sm:flex-row gap-4 items-start sm:items-center justify-between">
-                  <div className="flex items-center gap-4">
-                    <div className="flex h-12 w-12 items-center justify-center rounded-xl bg-orange-500/10 text-orange-500">
-                      <Layers className="h-6 w-6" />
-                    </div>
-                    <div>
-                      <div className="font-semibold text-lg">NutriPlan Pro</div>
-                      <div className="text-sm text-muted-foreground">Healthy Life Inc. · Fitness & Nutrition</div>
-                      <div className="text-xs mt-1 text-foreground/80">"Custom diet tracking for chronic diseases."</div>
+                    <div className="flex gap-2" onClick={(e) => e.stopPropagation()}>
+                      <Button size="sm" variant="outline" onClick={() => toast.error("Submission rejected.")}>Reject</Button>
+                      <Button size="sm" onClick={() => toast.success(`${sub.name} approved and added to marketplace!`)}>Approve</Button>
                     </div>
                   </div>
-                  <div className="flex gap-2">
-                    <Button size="sm" variant="outline" onClick={() => toast.error("Submission rejected.")}>Reject</Button>
-                    <Button size="sm" onClick={() => toast.success("NutriPlan Pro approved and added to marketplace!")}>Approve</Button>
-                  </div>
-                </div>
+                ))}
               </div>
             </section>
           </div>
@@ -656,6 +653,12 @@ export function SuperAdminConsole() {
                   <strong>Warning:</strong> Changing the backend configuration will immediately reload the application. Any unsynced local data will not automatically transfer to the cloud database.
                 </p>
               </div>
+
+              <div className="mt-6 flex justify-end">
+                <Button onClick={() => toast.success("Database synchronized successfully!")} className="bg-emerald-600 hover:bg-emerald-700">
+                  <Activity className="mr-2 h-4 w-4" /> Sync Database
+                </Button>
+              </div>
             </section>
           </div>
         )}
@@ -702,11 +705,26 @@ export function SuperAdminConsole() {
                   </div>
                   <div className="flex gap-4">
                     <div className="flex-1">
-                      <label className="text-sm font-medium">Primary Theme Color</label>
-                      <div className="flex items-center gap-2 mt-1">
-                        <input type="color" defaultValue="#3b82f6" className="h-9 w-9 p-0 border-0 rounded overflow-hidden cursor-pointer" />
-                        <Input defaultValue="#3b82f6" className="font-mono text-xs" />
+                      <label className="text-sm font-medium">Theme Color Settings</label>
+                      <div className="space-y-3 mt-2">
+                        <div className="flex items-center justify-between gap-4">
+                          <span className="text-xs font-medium w-24">Primary</span>
+                          <input type="color" defaultValue="#3b82f6" className="h-8 w-16 p-0 border-0 rounded cursor-pointer" onChange={(e) => document.documentElement.style.setProperty('--primary', e.target.value)} />
+                        </div>
+                        <div className="flex items-center justify-between gap-4">
+                          <span className="text-xs font-medium w-24">Background</span>
+                          <input type="color" defaultValue="#020817" className="h-8 w-16 p-0 border-0 rounded cursor-pointer" onChange={(e) => document.documentElement.style.setProperty('--background', e.target.value)} />
+                        </div>
+                        <div className="flex items-center justify-between gap-4">
+                          <span className="text-xs font-medium w-24">Card</span>
+                          <input type="color" defaultValue="#0f172a" className="h-8 w-16 p-0 border-0 rounded cursor-pointer" onChange={(e) => document.documentElement.style.setProperty('--card', e.target.value)} />
+                        </div>
+                        <div className="flex items-center justify-between gap-4">
+                          <span className="text-xs font-medium w-24">Foreground</span>
+                          <input type="color" defaultValue="#f8fafc" className="h-8 w-16 p-0 border-0 rounded cursor-pointer" onChange={(e) => document.documentElement.style.setProperty('--foreground', e.target.value)} />
+                        </div>
                       </div>
+                      <p className="text-[10px] text-muted-foreground mt-2">Changes apply immediately via CSS variables.</p>
                     </div>
                   </div>
                 </div>
