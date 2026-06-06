@@ -2,6 +2,7 @@ import { createFileRoute, Link } from "@tanstack/react-router";
 import { Activity, ArrowRight, HeartPulse, Stethoscope, Shield, CheckCircle2, Code2, Rocket, Layers } from "lucide-react";
 import { useState } from "react";
 import { toast } from "sonner";
+import { useTranslation } from "@/lib/i18n";
 
 export const Route = createFileRoute("/")({
   head: () => ({
@@ -14,6 +15,7 @@ export const Route = createFileRoute("/")({
 });
 
 function LandingPage() {
+  const { t } = useTranslation();
   const [appName, setAppName] = useState("");
   const [devName, setDevName] = useState("");
   const [category, setCategory] = useState("Mental Health");
@@ -119,17 +121,17 @@ function LandingPage() {
         <div className="mx-auto flex h-16 max-w-7xl items-center justify-between px-6">
           <div className="flex items-center gap-2">
             <Activity className="h-6 w-6 text-primary" />
-            <span className="text-lg font-bold tracking-tight">TenaGulecha</span>
+            <span className="text-lg font-bold tracking-tight">{t("app.title")}</span>
           </div>
           <div className="flex items-center gap-6">
             <Link to="/login" className="text-sm font-medium text-muted-foreground hover:text-foreground transition-colors">
-              Log in
+              {t("nav.login")}
             </Link>
             <Link
               to="/signup"
               className="inline-flex items-center justify-center rounded-full bg-primary/10 border border-primary/20 px-4 py-1.5 text-sm font-medium text-primary transition-all hover:bg-primary hover:text-primary-foreground shadow-[0_0_15px_rgba(var(--primary),0.2)]"
             >
-              Sign up
+              {t("nav.signup")}
             </Link>
           </div>
         </div>
@@ -153,16 +155,15 @@ function LandingPage() {
           <div className="mx-auto max-w-5xl px-6 text-center z-10 relative">
             <div className="inline-flex items-center rounded-full border border-white/10 bg-white/5 backdrop-blur-sm px-3 py-1 text-xs font-medium text-muted-foreground mb-8 animate-in fade-in slide-in-from-bottom-4 duration-1000">
               <span className="flex h-1.5 w-1.5 rounded-full bg-primary mr-2 animate-pulse"></span>
-              Welcome to TenaGulecha
+              {t("hero.badge")}
             </div>
             
             <h1 className="text-5xl md:text-7xl font-extrabold tracking-tight mb-6 animate-in fade-in slide-in-from-bottom-6 duration-1000 delay-150 text-foreground drop-shadow-sm uppercase">
-              HEALTH MANAGEMENT, <br className="hidden md:block" />
-              <span className="text-transparent bg-clip-text bg-gradient-to-r from-primary to-blue-400">MADE TRANSPARENT.</span>
+              {t("hero.title")}
             </h1>
             
             <p className="mx-auto max-w-2xl text-lg text-foreground/80 mb-12 leading-relaxed animate-in fade-in slide-in-from-bottom-8 duration-1000 delay-300 drop-shadow-sm">
-              TenaGulecha acts as an operating system for your health journey. Whether you are an individual tracking wellness goals or an organizer running a clinic, our transparent ecosystem brings everything together seamlessly.
+              {t("hero.subtitle")}
             </p>
             
             <div className="flex flex-col sm:flex-row items-center justify-center gap-4 animate-in fade-in slide-in-from-bottom-10 duration-1000 delay-500">
@@ -170,14 +171,14 @@ function LandingPage() {
                 to="/signup"
                 className="group inline-flex items-center justify-center rounded-full bg-primary px-8 py-3.5 text-sm font-semibold text-primary-foreground transition-all hover:bg-primary/90 shadow-[0_0_30px_rgba(var(--primary),0.3)] hover:scale-105"
               >
-                Get Started
+                {t("hero.start")}
                 <ArrowRight className="ml-2 h-4 w-4 transition-transform group-hover:translate-x-1" />
               </Link>
               <Link
                 to="/login"
                 className="inline-flex items-center justify-center rounded-full border border-white/10 bg-white/5 backdrop-blur-md px-8 py-3.5 text-sm font-semibold text-foreground transition-all hover:bg-white/10"
               >
-                Sign In
+                {t("hero.signin")}
               </Link>
             </div>
           </div>
@@ -190,7 +191,7 @@ function LandingPage() {
               <div className="inline-flex items-center justify-center rounded-2xl bg-primary/10 text-primary mb-4 p-3">
                 <Activity className="h-6 w-6" />
               </div>
-              <h2 className="text-3xl font-bold tracking-tight mb-4">About TenaGulecha</h2>
+              <h2 className="text-3xl font-bold tracking-tight mb-4">{t("about.title")}</h2>
               <p className="text-lg text-muted-foreground leading-relaxed max-w-3xl mx-auto">
                 TenaGulecha is a comprehensive Health Operating System designed to bridge the gap between individuals seeking better health and the professionals and businesses providing care. We act as a central hub where your health data, services, and applications securely converge.
               </p>
@@ -261,7 +262,7 @@ function LandingPage() {
           <div className="absolute inset-0 bg-gradient-to-b from-transparent via-accent/5 to-transparent -z-10" />
           <div className="mx-auto max-w-7xl px-6">
             <div className="mb-16 text-center">
-              <h2 className="text-3xl font-bold tracking-tight mb-4">A unified ecosystem</h2>
+              <h2 className="text-3xl font-bold tracking-tight mb-4">{t("ecosystem.title")}</h2>
               <p className="text-muted-foreground max-w-2xl mx-auto">We eliminate the friction between patients, health experts, and providers through a clean, transparent interface designed for individuals, professionals, and listed businesses.</p>
             </div>
             
@@ -452,10 +453,10 @@ function LandingPage() {
       <footer className="border-t border-white/5 py-8 text-center bg-background/50 backdrop-blur-sm">
         <div className="flex items-center justify-center gap-2 mb-2 text-muted-foreground">
           <Activity className="h-4 w-4" />
-          <span className="font-semibold text-sm">TenaGulecha</span>
+          <span className="font-semibold text-sm">{t("app.title")}</span>
         </div>
         <p className="text-xs text-muted-foreground/60">
-          © 2026 TenaGulecha Health OS. All rights reserved.
+          {t("footer.rights")}
         </p>
       </footer>
     </div>

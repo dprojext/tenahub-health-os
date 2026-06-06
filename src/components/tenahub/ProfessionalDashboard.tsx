@@ -34,7 +34,10 @@ import { BarChart3, Users, Star, TrendingUp, Bot, Send } from "lucide-react";
 
 type ProTab = "dashboard" | "meetings" | "analytics" | "ai" | "profile";
 
+import { useTranslation } from "@/lib/i18n";
+
 export function ProfessionalDashboard() {
+  const { t } = useTranslation();
   const [activeTab, setActiveTab] = useState<ProTab>("dashboard");
   const [modalData, setModalData] = useState<{ title: string, data: any } | null>(null);
 
@@ -47,19 +50,19 @@ export function ProfessionalDashboard() {
           onClick={() => setActiveTab("dashboard")}
           className={cn("flex items-center gap-1.5 px-4 py-2 text-xs font-bold rounded-lg border border-transparent transition-all", activeTab === "dashboard" ? "bg-primary/10 text-primary border-primary/20" : "text-muted-foreground hover:text-foreground hover:bg-accent/40")}
         >
-          <Activity className="h-4 w-4" /> Dashboard
+          <Activity className="h-4 w-4" /> {t("tabs.dashboard")}
         </button>
         <button
           onClick={() => setActiveTab("meetings")}
           className={cn("flex items-center gap-1.5 px-4 py-2 text-xs font-bold rounded-lg border border-transparent transition-all", activeTab === "meetings" ? "bg-primary/10 text-primary border-primary/20" : "text-muted-foreground hover:text-foreground hover:bg-accent/40")}
         >
-          <CalendarDays className="h-4 w-4" /> Meetings
+          <CalendarDays className="h-4 w-4" /> {t("tabs.meetings")}
         </button>
         <button
           onClick={() => setActiveTab("analytics")}
           className={cn("flex items-center gap-1.5 px-4 py-2 text-xs font-bold rounded-lg border border-transparent transition-all", activeTab === "analytics" ? "bg-primary/10 text-primary border-primary/20" : "text-muted-foreground hover:text-foreground hover:bg-accent/40")}
         >
-          <BarChart3 className="h-4 w-4" /> Analytics
+          <BarChart3 className="h-4 w-4" /> {t("tabs.analytics")}
         </button>
         <button
           onClick={() => setActiveTab("ai")}
@@ -71,7 +74,7 @@ export function ProfessionalDashboard() {
           onClick={() => setActiveTab("profile")}
           className={cn("flex items-center gap-1.5 px-4 py-2 text-xs font-bold rounded-lg border border-transparent transition-all", activeTab === "profile" ? "bg-primary/10 text-primary border-primary/20" : "text-muted-foreground hover:text-foreground hover:bg-accent/40")}
         >
-          <User className="h-4 w-4" /> Profile
+          <User className="h-4 w-4" /> {t("tabs.profile")}
         </button>
       </div>
 

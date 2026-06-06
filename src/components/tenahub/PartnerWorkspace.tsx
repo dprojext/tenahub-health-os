@@ -108,7 +108,10 @@ const initialAppointments = [
   { id: 2, title: "Annual Blood Work", clinic: "Addis Diagnostics", date: "Jun 14, 14:00", status: "Confirmed" },
 ];
 
+import { useTranslation } from "@/lib/i18n";
+
 export function PartnerWorkspace() {
+  const { t } = useTranslation();
   const [activeTab, setActiveTab] = useState<WorkspaceTab>("dashboard");
   const [modalData, setModalData] = useState<{ title: string, data: any } | null>(null);
 
@@ -393,13 +396,13 @@ export function PartnerWorkspace() {
 
       {/* Tab Navigation */}
       <div className="flex flex-wrap justify-center border-b border-border pb-2 gap-2">
-        <TabNavButton active={activeTab === "dashboard"} onClick={() => setActiveTab("dashboard")} Icon={Activity} label="Dashboard" />
-        <TabNavButton active={activeTab === "analytics"} onClick={() => setActiveTab("analytics")} Icon={BarChart3} label="Analytics" />
-        <TabNavButton active={activeTab === "reports"} onClick={() => setActiveTab("reports")} Icon={FileText} label="Reports" />
-        <TabNavButton active={activeTab === "patients"} onClick={() => setActiveTab("patients")} Icon={Users} label="Linked Patients" />
-        <TabNavButton active={activeTab === "appointments"} onClick={() => setActiveTab("appointments")} Icon={Calendar} label="Appointments" />
-        <TabNavButton active={activeTab === "portal"} onClick={() => setActiveTab("portal")} Icon={Settings} label="Portal Settings" />
-        <TabNavButton active={activeTab === "profile"} onClick={() => setActiveTab("profile")} Icon={Building2} label="Profile" />
+        <TabNavButton active={activeTab === "dashboard"} onClick={() => setActiveTab("dashboard")} Icon={Activity} label={t("tabs.dashboard")} />
+        <TabNavButton active={activeTab === "analytics"} onClick={() => setActiveTab("analytics")} Icon={BarChart3} label={t("tabs.analytics")} />
+        <TabNavButton active={activeTab === "reports"} onClick={() => setActiveTab("reports")} Icon={FileText} label={t("tabs.reports")} />
+        <TabNavButton active={activeTab === "patients"} onClick={() => setActiveTab("patients")} Icon={Users} label={t("tabs.patients")} />
+        <TabNavButton active={activeTab === "appointments"} onClick={() => setActiveTab("appointments")} Icon={Calendar} label={t("tabs.appointments")} />
+        <TabNavButton active={activeTab === "portal"} onClick={() => setActiveTab("portal")} Icon={Settings} label={t("tabs.portal")} />
+        <TabNavButton active={activeTab === "profile"} onClick={() => setActiveTab("profile")} Icon={Building2} label={t("tabs.profile")} />
       </div>
 
       <div className="mt-4">

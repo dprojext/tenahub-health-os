@@ -40,10 +40,12 @@ const incidents = [
 const sparkline = [22, 30, 28, 41, 38, 52, 47, 60, 58, 71, 68, 80];
 
 import { Globe2 } from "lucide-react";
+import { useTranslation, defaultDictionary } from "@/lib/i18n";
 
 type AdminTab = "dashboard" | "users" | "organizers" | "professionals" | "miniapps" | "submissions" | "analytics" | "reports" | "database" | "translations" | "settings";
 
 export function SuperAdminConsole() {
+  const { t, dict, setDict } = useTranslation();
   const [activeTab, setActiveTab] = useState<AdminTab>("dashboard");
   const [partners, setPartners] = useState(initialPartners);
   const [filter, setFilter] = useState("");
@@ -200,17 +202,17 @@ export function SuperAdminConsole() {
           <span className="font-bold text-lg tracking-tight">Super Admin</span>
         </div>
         <div className="h-px bg-border my-2 mx-3 hidden md:block"></div>
-        <NavButton active={activeTab === "dashboard"} onClick={() => setActiveTab("dashboard")} icon={LayoutDashboard} label="Dashboard" />
-        <NavButton active={activeTab === "users"} onClick={() => setActiveTab("users")} icon={Users} label="Users" />
-        <NavButton active={activeTab === "organizers"} onClick={() => setActiveTab("organizers")} icon={Building2} label="Listed Businesses" />
-        <NavButton active={activeTab === "professionals"} onClick={() => setActiveTab("professionals")} icon={User} label="Professionals" />
-        <NavButton active={activeTab === "miniapps"} onClick={() => setActiveTab("miniapps")} icon={Layers} label="Mini Apps" />
-        <NavButton active={activeTab === "submissions"} onClick={() => setActiveTab("submissions")} icon={Activity} label="Submissions" />
-        <NavButton active={activeTab === "analytics"} onClick={() => setActiveTab("analytics")} icon={PieChart} label="Analytics" />
-        <NavButton active={activeTab === "reports"} onClick={() => setActiveTab("reports")} icon={FileText} label="Reports" />
-        <NavButton active={activeTab === "database"} onClick={() => setActiveTab("database")} icon={Database} label="Database" />
-        <NavButton active={activeTab === "translations"} onClick={() => setActiveTab("translations")} icon={Globe2} label="Translations" />
-        <NavButton active={activeTab === "settings"} onClick={() => setActiveTab("settings")} icon={Settings} label="Settings" />
+        <NavButton active={activeTab === "dashboard"} onClick={() => setActiveTab("dashboard")} icon={LayoutDashboard} label={t("tabs.dashboard")} />
+        <NavButton active={activeTab === "users"} onClick={() => setActiveTab("users")} icon={Users} label={t("tabs.users")} />
+        <NavButton active={activeTab === "organizers"} onClick={() => setActiveTab("organizers")} icon={Building2} label={t("tabs.organizations")} />
+        <NavButton active={activeTab === "professionals"} onClick={() => setActiveTab("professionals")} icon={User} label={t("tabs.professionals")} />
+        <NavButton active={activeTab === "miniapps"} onClick={() => setActiveTab("miniapps")} icon={Layers} label={t("tabs.miniapps")} />
+        <NavButton active={activeTab === "submissions"} onClick={() => setActiveTab("submissions")} icon={Activity} label={t("tabs.submissions")} />
+        <NavButton active={activeTab === "analytics"} onClick={() => setActiveTab("analytics")} icon={PieChart} label={t("tabs.analytics")} />
+        <NavButton active={activeTab === "reports"} onClick={() => setActiveTab("reports")} icon={FileText} label={t("tabs.reports")} />
+        <NavButton active={activeTab === "database"} onClick={() => setActiveTab("database")} icon={Database} label={t("tabs.database")} />
+        <NavButton active={activeTab === "translations"} onClick={() => setActiveTab("translations")} icon={Globe2} label={t("tabs.translations")} />
+        <NavButton active={activeTab === "settings"} onClick={() => setActiveTab("settings")} icon={Settings} label={t("tabs.settings")} />
       </aside>
 
       {/* Main Content Area */}
@@ -688,31 +690,25 @@ export function SuperAdminConsole() {
                     </tr>
                   </thead>
                   <tbody className="divide-y divide-border">
-                    <tr className="bg-background">
-                      <td className="px-4 py-3 font-mono text-xs text-muted-foreground">nav.dashboard</td>
-                      <td className="px-4 py-3"><Input defaultValue="Dashboard" className="h-8" /></td>
-                      <td className="px-4 py-3"><Input defaultValue="ዳሽቦርድ" className="h-8" /></td>
-                    </tr>
-                    <tr className="bg-background">
-                      <td className="px-4 py-3 font-mono text-xs text-muted-foreground">nav.appointments</td>
-                      <td className="px-4 py-3"><Input defaultValue="Appointments" className="h-8" /></td>
-                      <td className="px-4 py-3"><Input defaultValue="ቀጠሮዎች" className="h-8" /></td>
-                    </tr>
-                    <tr className="bg-background">
-                      <td className="px-4 py-3 font-mono text-xs text-muted-foreground">hero.title</td>
-                      <td className="px-4 py-3"><Input defaultValue="HEALTH MANAGEMENT" className="h-8" /></td>
-                      <td className="px-4 py-3"><Input defaultValue="የጤና አያያዝ" className="h-8" /></td>
-                    </tr>
-                    <tr className="bg-background">
-                      <td className="px-4 py-3 font-mono text-xs text-muted-foreground">button.login</td>
-                      <td className="px-4 py-3"><Input defaultValue="Log In" className="h-8" /></td>
-                      <td className="px-4 py-3"><Input defaultValue="ግባ" className="h-8" /></td>
-                    </tr>
-                    <tr className="bg-background">
-                      <td className="px-4 py-3 font-mono text-xs text-muted-foreground">button.signup</td>
-                      <td className="px-4 py-3"><Input defaultValue="Sign Up" className="h-8" /></td>
-                      <td className="px-4 py-3"><Input defaultValue="ተመዝገብ" className="h-8" /></td>
-                    </tr>
+                    {Object.entries(dict).map(([key, translations]) => (
+                      <tr key={key} className="bg-background">
+                        <td className="px-4 py-3 font-mono text-xs text-muted-foreground">{key}</td>
+                        <td className="px-4 py-3">
+                          <Input 
+                            value={translations.English} 
+                            onChange={(e) => setDict({ ...dict, [key]: { ...translations, English: e.target.value } })}
+                            className="h-8" 
+                          />
+                        </td>
+                        <td className="px-4 py-3">
+                          <Input 
+                            value={translations.Amharic} 
+                            onChange={(e) => setDict({ ...dict, [key]: { ...translations, Amharic: e.target.value } })}
+                            className="h-8" 
+                          />
+                        </td>
+                      </tr>
+                    ))}
                   </tbody>
                 </table>
               </div>

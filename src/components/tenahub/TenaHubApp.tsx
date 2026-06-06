@@ -1,6 +1,7 @@
 import { useState, useEffect } from "react";
 import { Activity, Building2, Shield, User, Settings, LogOut, ChevronDown } from "lucide-react";
 import { UserDashboard } from "./UserDashboard";
+import { useTranslation } from "@/lib/i18n";
 import { PartnerWorkspace } from "./PartnerWorkspace";
 import { SuperAdminConsole } from "./SuperAdminConsole";
 import { ProfessionalDashboard } from "./ProfessionalDashboard";
@@ -18,13 +19,13 @@ const tabs: { id: View; label: string; short: string; Icon: typeof Activity }[] 
 ];
 
 export function TenaHubApp({ initialView = "user" }: { initialView?: View }) {
+  const { t, language, setLanguage } = useTranslation();
   const [view, setView] = useState<View>(initialView);
   const [showSettingsModal, setShowSettingsModal] = useState(false);
   
   // Settings State
   const [isDarkMode, setIsDarkMode] = useState(false);
   const [emailNotifs, setEmailNotifs] = useState(true);
-  const [language, setLanguage] = useState("English");
 
   useEffect(() => {
     const savedTheme = localStorage.getItem("theme");
@@ -59,7 +60,7 @@ export function TenaHubApp({ initialView = "user" }: { initialView?: View }) {
         <div className="mx-auto flex h-16 max-w-7xl items-center justify-between px-4 sm:px-6">
           <div className="flex items-center gap-2 cursor-pointer" onClick={() => window.location.href = "/"}>
             <Activity className="h-5 w-5 text-primary sm:h-6 sm:w-6" />
-            <span className="text-base font-bold tracking-tight sm:text-lg">TenaGulecha</span>
+            <span className="text-base font-bold tracking-tight sm:text-lg">{t("app.title")}</span>
           </div>
 
           {/* Toggle - Only for Super Admin on Dashboard */}
@@ -154,9 +155,12 @@ export function TenaHubApp({ initialView = "user" }: { initialView?: View }) {
                   <div className="text-xs text-muted-foreground">Select your preferred language</div>
                 </div>
                 <select 
-                  className="rounded-lg border border-input bg-transparent px-2 py-1 text-xs" 
+                  className="rounded-lg border border-input bg-background px-2 py-1 text-xs" 
                   value={language}
-                  onChange={(e) => { setLanguage(e.target.value); toast.success("Language updated"); }}
+                  onChange={(e) => { 
+                    setLanguage(e.target.value as "English" | "Amharic"); 
+                    toast.success("Language updated"); 
+                  }}
                 >
                   <option>English</option>
                   <option>Amharic</option>

@@ -296,7 +296,10 @@ type UserTab = "dashboard" | "healthdata" | "miniapps" | "professionals" | "orga
 
 // ─── COMPONENT ────────────────────────────────────────────────────────────────
 
+import { useTranslation } from "@/lib/i18n";
+
 export function UserDashboard() {
+  const { t } = useTranslation();
   const [activeTab, setActiveTab] = useState<UserTab>("dashboard");
   const [appointments, setAppointments] = useState<any[]>(() => {
     const stored = localStorage.getItem("tenahub_appointments");
@@ -934,13 +937,13 @@ export function UserDashboard() {
 
       {/* ═══ TABBED NAVIGATION ═══ */}
       <div className="flex flex-wrap justify-center pb-2 gap-2">
-        <TabButton active={activeTab === "dashboard"} onClick={() => setActiveTab("dashboard")} icon={LayoutDashboard} label="Dashboard" />
-        <TabButton active={activeTab === "healthdata"} onClick={() => setActiveTab("healthdata")} icon={Activity} label="Health Data" />
-        <TabButton active={activeTab === "miniapps"} onClick={() => setActiveTab("miniapps")} icon={Target} label="Mini-apps" />
-        <TabButton active={activeTab === "professionals"} onClick={() => setActiveTab("professionals")} icon={User} label="Professionals" />
-        <TabButton active={activeTab === "organizations"} onClick={() => setActiveTab("organizations")} icon={Building2} label="Organizations" />
-        <TabButton active={activeTab === "analytics"} onClick={() => setActiveTab("analytics")} icon={BarChart3} label="Analytics" />
-        <TabButton active={activeTab === "profile"} onClick={() => setActiveTab("profile")} icon={User} label="Profile" />
+        <TabButton active={activeTab === "dashboard"} onClick={() => setActiveTab("dashboard")} icon={LayoutDashboard} label={t("tabs.dashboard")} />
+        <TabButton active={activeTab === "healthdata"} onClick={() => setActiveTab("healthdata")} icon={Activity} label={t("tabs.healthdata")} />
+        <TabButton active={activeTab === "miniapps"} onClick={() => setActiveTab("miniapps")} icon={Target} label={t("tabs.miniapps")} />
+        <TabButton active={activeTab === "professionals"} onClick={() => setActiveTab("professionals")} icon={User} label={t("tabs.professionals")} />
+        <TabButton active={activeTab === "organizations"} onClick={() => setActiveTab("organizations")} icon={Building2} label={t("tabs.organizations")} />
+        <TabButton active={activeTab === "analytics"} onClick={() => setActiveTab("analytics")} icon={BarChart3} label={t("tabs.analytics")} />
+        <TabButton active={activeTab === "profile"} onClick={() => setActiveTab("profile")} icon={User} label={t("tabs.profile")} />
       </div>
 
       <div className="mt-6">
