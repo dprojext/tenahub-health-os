@@ -3,7 +3,7 @@ import { toast } from "sonner";
 import {
   Shield, Users, Building2, Activity, AlertTriangle, CheckCircle2,
   XCircle, TrendingUp, Search, LayoutDashboard, User, Settings, PieChart, X,
-  Layers, Plus, Globe, Download, FileText
+  Layers, Plus, Globe, Download, FileText, Database
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -39,7 +39,7 @@ const incidents = [
 
 const sparkline = [22, 30, 28, 41, 38, 52, 47, 60, 58, 71, 68, 80];
 
-type AdminTab = "dashboard" | "users" | "organizers" | "professionals" | "miniapps" | "analytics" | "settings";
+type AdminTab = "dashboard" | "users" | "organizers" | "professionals" | "miniapps" | "submissions" | "analytics" | "reports" | "database" | "settings";
 
 export function SuperAdminConsole() {
   const [activeTab, setActiveTab] = useState<AdminTab>("dashboard");
@@ -197,7 +197,10 @@ export function SuperAdminConsole() {
         <NavButton active={activeTab === "organizers"} onClick={() => setActiveTab("organizers")} icon={Building2} label="Listed Businesses" />
         <NavButton active={activeTab === "professionals"} onClick={() => setActiveTab("professionals")} icon={User} label="Professionals" />
         <NavButton active={activeTab === "miniapps"} onClick={() => setActiveTab("miniapps")} icon={Layers} label="Mini Apps" />
+        <NavButton active={activeTab === "submissions"} onClick={() => setActiveTab("submissions")} icon={Activity} label="Submissions" />
         <NavButton active={activeTab === "analytics"} onClick={() => setActiveTab("analytics")} icon={PieChart} label="Analytics" />
+        <NavButton active={activeTab === "reports"} onClick={() => setActiveTab("reports")} icon={FileText} label="Reports" />
+        <NavButton active={activeTab === "database"} onClick={() => setActiveTab("database")} icon={Database} label="Database" />
         <NavButton active={activeTab === "settings"} onClick={() => setActiveTab("settings")} icon={Settings} label="Settings" />
       </aside>
 
@@ -501,24 +504,215 @@ export function SuperAdminConsole() {
           </div>
         )}
 
+        {/* SUBMISSIONS TAB */}
+        {activeTab === "submissions" && (
+          <div className="space-y-6 animate-in fade-in slide-in-from-bottom-2 duration-300">
+            <section className="rounded-3xl bg-card border border-border p-6">
+              <div className="mb-6 flex justify-between items-center">
+                <div>
+                  <h2 className="text-xl font-bold">Pending Mini-App Submissions</h2>
+                  <p className="text-sm text-muted-foreground">Review apps submitted from the landing page form.</p>
+                </div>
+              </div>
+              <div className="space-y-4">
+                {/* Mock data for pending submissions */}
+                <div className="p-4 border border-border rounded-2xl bg-background flex flex-col sm:flex-row gap-4 items-start sm:items-center justify-between">
+                  <div className="flex items-center gap-4">
+                    <div className="flex h-12 w-12 items-center justify-center rounded-xl bg-primary/10 text-primary">
+                      <Layers className="h-6 w-6" />
+                    </div>
+                    <div>
+                      <div className="font-semibold text-lg">MyCalm Meditation</div>
+                      <div className="text-sm text-muted-foreground">Wellness Labs Ltd. · Mental Health</div>
+                      <div className="text-xs mt-1 text-foreground/80">"Daily guided mindfulness and mental resilience."</div>
+                    </div>
+                  </div>
+                  <div className="flex gap-2">
+                    <Button size="sm" variant="outline" onClick={() => toast.error("Submission rejected.")}>Reject</Button>
+                    <Button size="sm" onClick={() => toast.success("MyCalm Meditation approved and added to marketplace!")}>Approve</Button>
+                  </div>
+                </div>
+                
+                <div className="p-4 border border-border rounded-2xl bg-background flex flex-col sm:flex-row gap-4 items-start sm:items-center justify-between">
+                  <div className="flex items-center gap-4">
+                    <div className="flex h-12 w-12 items-center justify-center rounded-xl bg-orange-500/10 text-orange-500">
+                      <Layers className="h-6 w-6" />
+                    </div>
+                    <div>
+                      <div className="font-semibold text-lg">NutriPlan Pro</div>
+                      <div className="text-sm text-muted-foreground">Healthy Life Inc. · Fitness & Nutrition</div>
+                      <div className="text-xs mt-1 text-foreground/80">"Custom diet tracking for chronic diseases."</div>
+                    </div>
+                  </div>
+                  <div className="flex gap-2">
+                    <Button size="sm" variant="outline" onClick={() => toast.error("Submission rejected.")}>Reject</Button>
+                    <Button size="sm" onClick={() => toast.success("NutriPlan Pro approved and added to marketplace!")}>Approve</Button>
+                  </div>
+                </div>
+              </div>
+            </section>
+          </div>
+        )}
+
+        {/* REPORTS TAB */}
+        {activeTab === "reports" && (
+          <div className="space-y-6 animate-in fade-in slide-in-from-bottom-2 duration-300">
+            <div className="flex justify-between items-center mb-2">
+              <div>
+                <h2 className="text-2xl font-bold tracking-tight">System Reports</h2>
+                <p className="text-sm text-muted-foreground mt-1">Generate and download comprehensive system reports.</p>
+              </div>
+            </div>
+            <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-4">
+              <div className="rounded-3xl border border-border bg-card p-6 flex flex-col justify-between h-full group hover:border-primary/50 transition">
+                <div>
+                  <div className="flex items-center gap-3 mb-4">
+                    <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-blue-500/10 text-blue-500">
+                      <FileText className="h-5 w-5" />
+                    </div>
+                    <h3 className="font-semibold">User Activity Log</h3>
+                  </div>
+                  <p className="text-sm text-muted-foreground mb-6">Detailed export of user logins, module usage, and profile syncs over the last 30 days.</p>
+                </div>
+                <Button variant="outline" className="w-full group-hover:bg-primary group-hover:text-primary-foreground transition-colors" onClick={() => toast.success("Generating Activity Log (PDF)...")}>
+                  <Download className="mr-2 h-4 w-4" /> Download PDF
+                </Button>
+              </div>
+
+              <div className="rounded-3xl border border-border bg-card p-6 flex flex-col justify-between h-full group hover:border-primary/50 transition">
+                <div>
+                  <div className="flex items-center gap-3 mb-4">
+                    <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-emerald-500/10 text-emerald-500">
+                      <FileText className="h-5 w-5" />
+                    </div>
+                    <h3 className="font-semibold">Financial & Billing</h3>
+                  </div>
+                  <p className="text-sm text-muted-foreground mb-6">Complete transaction history, partner payouts, and platform fee collections.</p>
+                </div>
+                <Button variant="outline" className="w-full group-hover:bg-primary group-hover:text-primary-foreground transition-colors" onClick={() => toast.success("Generating Financial Report (CSV)...")}>
+                  <Download className="mr-2 h-4 w-4" /> Download CSV
+                </Button>
+              </div>
+
+              <div className="rounded-3xl border border-border bg-card p-6 flex flex-col justify-between h-full group hover:border-primary/50 transition">
+                <div>
+                  <div className="flex items-center gap-3 mb-4">
+                    <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-rose-500/10 text-rose-500">
+                      <FileText className="h-5 w-5" />
+                    </div>
+                    <h3 className="font-semibold">API Usage & Health</h3>
+                  </div>
+                  <p className="text-sm text-muted-foreground mb-6">Endpoint latencies, error rates, and total calls aggregated by partner organization.</p>
+                </div>
+                <Button variant="outline" className="w-full group-hover:bg-primary group-hover:text-primary-foreground transition-colors" onClick={() => toast.success("Generating API Health Report (Excel)...")}>
+                  <Download className="mr-2 h-4 w-4" /> Download Excel
+                </Button>
+              </div>
+            </div>
+          </div>
+        )}
+
+        {/* DATABASE TAB */}
+        {activeTab === "database" && (
+          <div className="space-y-6 animate-in fade-in slide-in-from-bottom-2 duration-300">
+            <section className="rounded-3xl bg-card border border-border p-6">
+              <h2 className="text-xl font-bold mb-2">Backend Connection Setup</h2>
+              <p className="text-sm text-muted-foreground mb-6">Configure where the application stores and retrieves its data.</p>
+              
+              <div className="grid md:grid-cols-2 gap-6">
+                <div className="p-6 border-2 border-primary bg-primary/5 rounded-2xl relative cursor-pointer transition">
+                  <div className="absolute top-4 right-4 bg-primary text-primary-foreground text-[10px] font-bold px-2 py-1 rounded-full uppercase">Active</div>
+                  <div className="flex items-center gap-3 mb-4">
+                    <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-primary/20 text-primary">
+                      <Database className="h-5 w-5" />
+                    </div>
+                    <h3 className="text-lg font-bold">Local Storage Mode</h3>
+                  </div>
+                  <p className="text-sm text-muted-foreground mb-4">
+                    Data is stored entirely within the browser's LocalStorage. This mode requires no setup and is currently active for the demo.
+                  </p>
+                  <Button className="w-full" disabled>Currently Selected</Button>
+                </div>
+
+                <div className="p-6 border border-border bg-background rounded-2xl relative cursor-pointer hover:border-emerald-500/50 transition" onClick={() => toast.info("Supabase integration is locked for the demo mode.")}>
+                  <div className="flex items-center gap-3 mb-4">
+                    <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-emerald-500/10 text-emerald-500">
+                      <Database className="h-5 w-5" />
+                    </div>
+                    <h3 className="text-lg font-bold">Supabase Cloud</h3>
+                  </div>
+                  <p className="text-sm text-muted-foreground mb-4">
+                    Connect to a real-time Postgres database via Supabase. Note: Changing the backend might alter login credentials and invalidate existing demo data.
+                  </p>
+                  <Button variant="outline" className="w-full">Switch to Supabase</Button>
+                </div>
+              </div>
+
+              <div className="mt-6 p-4 rounded-xl bg-amber-500/10 border border-amber-500/20 flex gap-3 text-amber-600">
+                <AlertTriangle className="h-5 w-5 shrink-0" />
+                <p className="text-sm">
+                  <strong>Warning:</strong> Changing the backend configuration will immediately reload the application. Any unsynced local data will not automatically transfer to the cloud database.
+                </p>
+              </div>
+            </section>
+          </div>
+        )}
+
         {/* SETTINGS TAB */}
         {activeTab === "settings" && (
           <div className="space-y-6 animate-in fade-in slide-in-from-bottom-2 duration-300">
             <section className="rounded-3xl bg-card border border-border p-6">
-              <h2 className="text-xl font-bold mb-6">Platform Settings</h2>
-              <div className="space-y-4 max-w-lg">
-                <div>
-                  <label className="text-sm font-medium">Platform Name</label>
-                  <Input defaultValue="TenaGulecha" className="mt-1" />
+              <h2 className="text-xl font-bold mb-6">Platform Settings & Customization</h2>
+              
+              <div className="grid md:grid-cols-2 gap-8">
+                <div className="space-y-4">
+                  <h3 className="font-semibold text-lg border-b border-border pb-2">General Info</h3>
+                  <div>
+                    <label className="text-sm font-medium">Platform Name</label>
+                    <Input defaultValue="TenaGulecha" className="mt-1" />
+                  </div>
+                  <div>
+                    <label className="text-sm font-medium">Support Email</label>
+                    <Input defaultValue="support@tenagulecha.com" className="mt-1" />
+                  </div>
+                  <div>
+                    <label className="text-sm font-medium">Default Language</label>
+                    <select className="w-full rounded-md border border-input bg-background px-3 py-2 text-sm mt-1">
+                      <option>English</option>
+                      <option>Amharic</option>
+                    </select>
+                  </div>
                 </div>
-                <div>
-                  <label className="text-sm font-medium">Support Email</label>
-                  <Input defaultValue="support@tenagulecha.com" className="mt-1" />
+
+                <div className="space-y-4">
+                  <h3 className="font-semibold text-lg border-b border-border pb-2">Landing Page Settings</h3>
+                  <div>
+                    <label className="text-sm font-medium">Hero Title</label>
+                    <Input defaultValue="HEALTH MANAGEMENT, MADE TRANSPARENT." className="mt-1" />
+                  </div>
+                  <div>
+                    <label className="text-sm font-medium">Hero Subtitle</label>
+                    <textarea 
+                      className="w-full rounded-md border border-input bg-background px-3 py-2 text-sm mt-1 resize-none"
+                      rows={3}
+                      defaultValue="TenaGulecha acts as an operating system for your health journey. Whether you are an individual tracking wellness goals or an organizer running a clinic, our transparent ecosystem brings everything together seamlessly."
+                    />
+                  </div>
+                  <div className="flex gap-4">
+                    <div className="flex-1">
+                      <label className="text-sm font-medium">Primary Theme Color</label>
+                      <div className="flex items-center gap-2 mt-1">
+                        <input type="color" defaultValue="#3b82f6" className="h-9 w-9 p-0 border-0 rounded overflow-hidden cursor-pointer" />
+                        <Input defaultValue="#3b82f6" className="font-mono text-xs" />
+                      </div>
+                    </div>
+                  </div>
                 </div>
-                <div className="pt-4 border-t border-border flex gap-2">
-                  <Button onClick={() => toast.success("Settings saved successfully")}>Save Changes</Button>
-                  <Button variant="destructive" onClick={() => toast.warning("Maintenance mode initiated")}>Enable Maintenance Mode</Button>
-                </div>
+              </div>
+
+              <div className="pt-6 mt-6 border-t border-border flex gap-3 justify-end">
+                <Button variant="destructive" onClick={() => toast.warning("Maintenance mode initiated")}>Enable Maintenance Mode</Button>
+                <Button onClick={() => toast.success("Global platform settings updated successfully")}>Save All Changes</Button>
               </div>
             </section>
           </div>
