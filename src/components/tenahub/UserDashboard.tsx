@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useRef, useEffect } from "react";
 import { toast } from "sonner";
 import {
   Heart, Droplet, Target, CalendarPlus, Video, Calendar, CheckCircle2, Circle,
@@ -6,7 +6,7 @@ import {
   MessageSquare, User, Building2, Send, BarChart3, TrendingUp, Activity,
   LayoutDashboard, Play, FileText, Download, Save, Apple, GlassWater, Flame,
   Moon, Footprints, Scale, ChevronLeft, ChevronRight, Star, MapPin, Phone,
-  Mail, Shield, Award, Utensils, ArrowRight, Layers
+  Mail, Shield, Award, Utensils, ArrowRight, Layers, Bot
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -292,7 +292,7 @@ interface HealthEntry {
   note?: string;
 }
 
-type UserTab = "dashboard" | "healthdata" | "miniapps" | "professionals" | "organizations" | "analytics" | "profile";
+type UserTab = "dashboard" | "healthdata" | "miniapps" | "professionals" | "organizations" | "analytics" | "ai" | "profile";
 
 // ─── COMPONENT ────────────────────────────────────────────────────────────────
 
@@ -301,6 +301,81 @@ import { useTranslation } from "@/lib/i18n";
 export function UserDashboard() {
   const { t } = useTranslation();
   const [activeTab, setActiveTab] = useState<UserTab>("dashboard");
+  
+  // AI Chat State
+  const messagesEndRef = useRef<HTMLDivElement>(null);
+  
+  const scrollToBottom = () => {
+    messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
+  };
+  
+  const [chatInput, setChatInput] = useState("");
+  const [isTyping, setIsTyping] = useState(false);
+  type ChatMessage = { role: string, content: string };
+  const [messages, setMessages] = useState<ChatMessage[]>(() => {
+    if (typeof window !== "undefined") {
+      const stored = localStorage.getItem("tenahub_user_ai_chat");
+      if (stored) {
+        try {
+          return JSON.parse(stored);
+        } catch (e) {}
+      }
+    }
+    return [
+      { 
+        role: "assistant", 
+        content: "Hello Dawit! I'm TenaHub AI, your secure personal health assistant. I can answer questions about the TenaGulecha platform, help you log your daily health metrics, or explain your lab results. How can I assist you today?" 
+      }
+    ];
+  });
+
+  useEffect(() => {
+    if (activeTab === "ai") {
+      scrollToBottom();
+    }
+  }, [messages, isTyping, activeTab]);
+
+  const handleSendMessage = (e: React.FormEvent) => {
+    e.preventDefault();
+    if (!chatInput.trim()) return;
+
+    const userMsg = chatInput.trim();
+    setMessages((prev: ChatMessage[]) => {
+      const updated = [...prev, { role: "user", content: userMsg }];
+      if (typeof window !== "undefined") {
+        localStorage.setItem("tenahub_user_ai_chat", JSON.stringify(updated));
+      }
+      return updated;
+    });
+    setChatInput("");
+    setIsTyping(true);
+
+    setTimeout(() => {
+      let aiResponse = "";
+      const lowerInput = userMsg.toLowerCase().trim();
+      
+      if (lowerInput === "hi" || lowerInput === "hello" || lowerInput === "hey" || lowerInput.includes("good morning") || lowerInput.includes("good afternoon")) {
+        aiResponse = "Hello good afternoon Dawit! What can I help you with? I can answer a limited number of things, such as:\n• Information about the TenaGulecha platform\n• Understanding your synced health data (steps, sleep, etc.)\n• Helping you find the right healthcare professional\n\n*Please remember to always consult with a licensed doctor for serious medical advice.*";
+      } else if (lowerInput.includes("platform") || lowerInput.includes("tenahub") || lowerInput.includes("tenagulecha") || lowerInput.includes("about")) {
+        aiResponse = "TenaGulecha is East Africa's first Health Super App! We provide a unified ecosystem that connects patients with professionals, allows organizations to list their clinics and labs, and offers a marketplace for specialized wellness mini-apps. You can use this dashboard to track your health data, integrate with wearables, and book telehealth sessions.";
+      } else if (lowerInput.includes("data") || lowerInput.includes("track") || lowerInput.includes("sync")) {
+        aiResponse = "You can view all your synced health data in the 'Health Data' tab. It automatically pulls information like steps, sleep, and heart rate from your connected devices (like your Apple Watch). You can also manually log any metric there!";
+      } else if (lowerInput.includes("doctor") || lowerInput.includes("professional") || lowerInput.includes("appointment")) {
+        aiResponse = "To find a doctor or specialist, check out the 'Professionals' tab. You can view their verified credentials, read patient reviews, and easily book a telehealth consultation directly through the platform.";
+      } else {
+        aiResponse = `Regarding your query about "${userMsg}", I've analyzed our health database. I recommend keeping a consistent health log and discussing this specific concern with a verified professional on our platform. Let me know if you'd like me to help you find a suitable doctor for a consultation.`;
+      }
+
+      setMessages((prev: ChatMessage[]) => {
+        const updated = [...prev, { role: "assistant", content: aiResponse }];
+        if (typeof window !== "undefined") {
+          localStorage.setItem("tenahub_user_ai_chat", JSON.stringify(updated));
+        }
+        return updated;
+      });
+      setIsTyping(false);
+    }, 1000);
+  };
   const [appointments, setAppointments] = useState<any[]>(() => {
     const stored = localStorage.getItem("tenahub_appointments");
     if (stored) {
@@ -943,6 +1018,7 @@ export function UserDashboard() {
         <TabButton active={activeTab === "professionals"} onClick={() => setActiveTab("professionals")} icon={User} label={t("tabs.professionals")} />
         <TabButton active={activeTab === "organizations"} onClick={() => setActiveTab("organizations")} icon={Building2} label={t("tabs.organizations")} />
         <TabButton active={activeTab === "analytics"} onClick={() => setActiveTab("analytics")} icon={BarChart3} label={t("tabs.analytics")} />
+        <TabButton active={activeTab === "ai"} onClick={() => setActiveTab("ai")} icon={Bot} label="AI Consult" />
         <TabButton active={activeTab === "profile"} onClick={() => setActiveTab("profile")} icon={User} label={t("tabs.profile")} />
       </div>
 
@@ -1395,6 +1471,71 @@ export function UserDashboard() {
                   </tbody>
                 </table>
               </div>
+            </div>
+          </div>
+        )}
+
+        {/* ═══════════════ AI TAB ═══════════════ */}
+        {activeTab === "ai" && (
+          <div className="space-y-6 animate-in fade-in slide-in-from-bottom-2 duration-300">
+            <div className="flex items-center justify-between">
+              <div>
+                <h2 className="text-2xl font-bold tracking-tight mb-2">TenaHub AI Assistant</h2>
+                <p className="text-sm text-muted-foreground mb-6">Ask about the platform, get help finding professionals, or understand your health metrics.</p>
+              </div>
+              <div className="hidden md:flex h-12 w-12 items-center justify-center rounded-2xl bg-primary/10 text-primary">
+                <Bot className="h-6 w-6" />
+              </div>
+            </div>
+
+            <div className="rounded-3xl border border-border bg-card overflow-hidden flex flex-col h-[60vh] min-h-[400px]">
+              {/* Chat History Area */}
+              <div className="flex-1 overflow-y-auto p-6 space-y-6">
+                {messages.map((msg: ChatMessage, idx: number) => (
+                  <div key={idx} className={cn("flex gap-4", msg.role === "user" && "flex-row-reverse")}>
+                    <div className={cn(
+                      "flex h-8 w-8 shrink-0 items-center justify-center rounded-full",
+                      msg.role === "user" ? "bg-emerald-500/20 text-emerald-500" : "bg-primary/20 text-primary"
+                    )}>
+                      {msg.role === "user" ? <User className="h-4 w-4" /> : <Bot className="h-4 w-4" />}
+                    </div>
+                    <div className={cn(
+                      "rounded-2xl px-4 py-3 text-sm max-w-[80%] leading-relaxed whitespace-pre-wrap",
+                      msg.role === "user" ? "bg-primary text-primary-foreground" : "bg-white/5 border border-white/10 text-foreground"
+                    )}>
+                      {msg.content}
+                    </div>
+                  </div>
+                ))}
+                
+                {isTyping && (
+                  <div className="flex gap-4">
+                    <div className="flex h-8 w-8 shrink-0 items-center justify-center rounded-full bg-primary/20 text-primary">
+                      <Bot className="h-4 w-4" />
+                    </div>
+                    <div className="rounded-2xl bg-white/5 border border-white/10 px-4 py-3 text-sm text-muted-foreground flex items-center gap-1">
+                      <span className="w-1.5 h-1.5 bg-primary/50 rounded-full animate-bounce"></span>
+                      <span className="w-1.5 h-1.5 bg-primary/50 rounded-full animate-bounce" style={{ animationDelay: "0.2s" }}></span>
+                      <span className="w-1.5 h-1.5 bg-primary/50 rounded-full animate-bounce" style={{ animationDelay: "0.4s" }}></span>
+                    </div>
+                  </div>
+                )}
+                <div ref={messagesEndRef} />
+              </div>
+
+              {/* Input Area */}
+              <form onSubmit={handleSendMessage} className="p-4 border-t border-border bg-card flex gap-3 items-center">
+                <input 
+                  type="text" 
+                  value={chatInput}
+                  onChange={(e) => setChatInput(e.target.value)}
+                  placeholder="Ask about TenaGulecha or your health..." 
+                  className="flex-1 bg-background border border-input rounded-full px-4 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-primary/50"
+                />
+                <Button type="submit" size="icon" className="rounded-full shrink-0" disabled={isTyping || !chatInput.trim()}>
+                  <Send className="h-4 w-4 ml-0.5" />
+                </Button>
+              </form>
             </div>
           </div>
         )}
