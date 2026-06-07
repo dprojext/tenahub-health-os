@@ -1301,26 +1301,26 @@ export function UserDashboard() {
           <div className="space-y-6 animate-in fade-in slide-in-from-bottom-2 duration-300">
             <SectionTitle title={t("user.pro.find")} subtitle={t("user.pro.subtitle")} />
             <div className="grid gap-4 md:grid-cols-3">
-              {professionals.map((p) => {
-                const ProIcon = getIcon(p.Icon);
+              {professionals?.filter(Boolean).map((p) => {
+                const ProIcon = getIcon(p?.Icon);
                 return (
-                  <div key={p.id} onClick={() => setModalData({ title: p.name, data: p, type: "professional" })} className="group flex flex-col rounded-3xl border border-border bg-card p-6 shadow-sm transition hover:shadow-md cursor-pointer hover:border-primary/50">
+                  <div key={p?.id || Math.random()} onClick={() => setModalData({ title: p?.name || "Professional", data: p, type: "professional" })} className="group flex flex-col rounded-3xl border border-border bg-card p-6 shadow-sm transition hover:shadow-md cursor-pointer hover:border-primary/50">
                     <div className="flex justify-between items-start mb-4">
-                      <div className={cn("inline-flex h-12 w-12 items-center justify-center rounded-xl bg-gradient-to-br", p.accent)}>
+                      <div className={cn("inline-flex h-12 w-12 items-center justify-center rounded-xl bg-gradient-to-br", p?.accent)}>
                         <ProIcon className="h-6 w-6" />
                       </div>
-                      {p.verified && <span className="bg-emerald-500/10 text-emerald-500 text-[10px] font-bold uppercase px-2 py-1 rounded-full flex items-center gap-1"><CheckCircle2 className="h-3 w-3" /> Verified</span>}
+                      {p?.verified && <span className="bg-emerald-500/10 text-emerald-500 text-[10px] font-bold uppercase px-2 py-1 rounded-full flex items-center gap-1"><CheckCircle2 className="h-3 w-3" /> Verified</span>}
                     </div>
                     <div className="flex-1">
-                      <div className="text-xs font-semibold uppercase tracking-wide text-muted-foreground">{p.specialty}</div>
-                      <h3 className="mt-1 text-lg font-bold">{p.name}</h3>
-                      <p className="mt-1 text-sm text-muted-foreground leading-relaxed">{p.tagline}</p>
+                      <div className="text-xs font-semibold uppercase tracking-wide text-muted-foreground">{p?.specialty}</div>
+                      <h3 className="mt-1 text-lg font-bold">{p?.name}</h3>
+                      <p className="mt-1 text-sm text-muted-foreground leading-relaxed">{p?.tagline}</p>
                     </div>
                     <div className="mt-2 text-xs text-muted-foreground flex items-center gap-2">
-                      <MapPin className="h-3 w-3" /> {p.location} · {p.consultationFee}
+                      <MapPin className="h-3 w-3" /> {p?.location} · {p?.consultationFee}
                     </div>
                       <div className="mt-4 pt-4 border-t border-border flex justify-between items-center">
-                        <span className="text-sm font-semibold flex items-center gap-1">⭐ {p.rating}</span>
+                        <span className="text-sm font-semibold flex items-center gap-1">⭐ {p?.rating}</span>
                         <Button size="sm" onClick={(e) => { e.stopPropagation(); setBookingProfessional(p); }}>
                           <CalendarPlus className="mr-1.5 h-3.5 w-3.5" /> {t("user.pro.book")}
                         </Button>
