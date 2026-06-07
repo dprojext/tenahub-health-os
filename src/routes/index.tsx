@@ -211,43 +211,43 @@ function LandingPage() {
               </div>
               <h2 className="text-3xl font-bold tracking-tight mb-4">{t("about.title")}</h2>
               <p className="text-lg text-muted-foreground leading-relaxed max-w-3xl mx-auto">
-                TenaGulecha is a comprehensive Health Operating System designed to bridge the gap between individuals seeking better health and the professionals and businesses providing care. We act as a central hub where your health data, services, and applications securely converge.
+                {t("about.desc1")}
               </p>
             </div>
             
             <div className="grid md:grid-cols-2 gap-12 items-center">
               <div>
-                <h3 className="text-2xl font-semibold mb-4">What We Do</h3>
+                <h3 className="text-2xl font-semibold mb-4">{t("about.whatwedo")}</h3>
                 <p className="text-muted-foreground mb-6 leading-relaxed">
-                  We provide a unified platform that simplifies health management. By integrating various wellness mini-apps, direct communication with healthcare providers, and a centralized health profile, we make it easier for you to track, understand, and improve your well-being.
+                  {t("about.whatwedo.desc")}
                 </p>
                 <ul className="space-y-3">
                   <li className="flex items-start">
                     <CheckCircle2 className="h-5 w-5 mr-3 text-primary mt-0.5 shrink-0" />
-                    <span className="text-muted-foreground">Centralize your health records and wellness data securely.</span>
+                    <span className="text-muted-foreground">{t("about.point1")}</span>
                   </li>
                   <li className="flex items-start">
                     <CheckCircle2 className="h-5 w-5 mr-3 text-primary mt-0.5 shrink-0" />
-                    <span className="text-muted-foreground">Connect you with certified professionals and verified clinics.</span>
+                    <span className="text-muted-foreground">{t("about.point2")}</span>
                   </li>
                   <li className="flex items-start">
                     <CheckCircle2 className="h-5 w-5 mr-3 text-primary mt-0.5 shrink-0" />
-                    <span className="text-muted-foreground">Offer a marketplace of specialized health mini-apps.</span>
+                    <span className="text-muted-foreground">{t("about.point3")}</span>
                   </li>
                 </ul>
               </div>
               <div className="relative">
                 <div className="absolute inset-0 bg-gradient-to-tr from-primary/20 to-blue-500/20 rounded-3xl blur-2xl -z-10" />
                 <div className="rounded-3xl border border-white/10 bg-card/50 backdrop-blur-xl p-8 shadow-xl">
-                  <h3 className="text-2xl font-semibold mb-4 text-foreground">What We Provide</h3>
+                  <h3 className="text-2xl font-semibold mb-4 text-foreground">{t("about.whatweprovide")}</h3>
                   <div className="space-y-6 mt-6">
                     <div className="flex gap-4">
                       <div className="h-10 w-10 rounded-full bg-blue-500/10 flex items-center justify-center shrink-0">
                         <Shield className="h-5 w-5 text-blue-500" />
                       </div>
                       <div>
-                        <h4 className="font-medium text-foreground mb-1">Secure Health Profiles</h4>
-                        <p className="text-sm text-muted-foreground">Your data is encrypted and completely under your control.</p>
+                        <h4 className="font-medium text-foreground mb-1">{t("about.prov1.title")}</h4>
+                        <p className="text-sm text-muted-foreground">{t("about.prov1.desc")}</p>
                       </div>
                     </div>
                     <div className="flex gap-4">
@@ -255,8 +255,8 @@ function LandingPage() {
                         <Layers className="h-5 w-5 text-emerald-500" />
                       </div>
                       <div>
-                        <h4 className="font-medium text-foreground mb-1">Mini-App Marketplace</h4>
-                        <p className="text-sm text-muted-foreground">Access targeted tools for mental health, fitness, maternity, and more.</p>
+                        <h4 className="font-medium text-foreground mb-1">{t("about.prov2.title")}</h4>
+                        <p className="text-sm text-muted-foreground">{t("about.prov2.desc")}</p>
                       </div>
                     </div>
                     <div className="flex gap-4">
@@ -264,8 +264,8 @@ function LandingPage() {
                         <Activity className="h-5 w-5 text-orange-500" />
                       </div>
                       <div>
-                        <h4 className="font-medium text-foreground mb-1">Real-time Analytics</h4>
-                        <p className="text-sm text-muted-foreground">Actionable insights from your wearables and daily tracking.</p>
+                        <h4 className="font-medium text-foreground mb-1">{t("about.prov3.title")}</h4>
+                        <p className="text-sm text-muted-foreground">{t("about.prov3.desc")}</p>
                       </div>
                     </div>
                   </div>
@@ -281,7 +281,7 @@ function LandingPage() {
           <div className="mx-auto max-w-7xl px-6">
             <div className="mb-16 text-center">
               <h2 className="text-3xl font-bold tracking-tight mb-4">{t("ecosystem.title")}</h2>
-              <p className="text-muted-foreground max-w-2xl mx-auto">We eliminate the friction between patients, health experts, and providers through a clean, transparent interface designed for individuals, professionals, and listed businesses.</p>
+              <p className="text-muted-foreground max-w-2xl mx-auto">{t("ecosystem.desc")}</p>
             </div>
             
             <div className="grid md:grid-cols-3 gap-8 max-w-6xl mx-auto">
@@ -290,12 +290,12 @@ function LandingPage() {
                 <div className="h-10 w-10 rounded-full border border-blue-500/20 bg-blue-500/10 text-blue-400 flex items-center justify-center mb-6">
                   <HeartPulse className="h-5 w-5" />
                 </div>
-                <h3 className="text-xl font-semibold mb-3">For Users</h3>
+                <h3 className="text-xl font-semibold mb-3">{t("eco.users.title")}</h3>
                 <p className="text-sm text-muted-foreground mb-6">
-                  Take control of your personal health data. Track your vitals, sign up for wellness challenges, and communicate directly with care providers.
+                  {t("eco.users.desc")}
                 </p>
                 <ul className="space-y-2">
-                  {['Personalized dashboard', 'Connect wearables', 'Book appointments'].map((item, i) => (
+                  {[t("eco.users.li1"), t("eco.users.li2"), t("eco.users.li3")].map((item, i) => (
                     <li key={i} className="flex items-center text-sm text-muted-foreground">
                       <CheckCircle2 className="h-4 w-4 mr-2 text-primary/70" /> {item}
                     </li>
@@ -308,12 +308,12 @@ function LandingPage() {
                 <div className="h-10 w-10 rounded-full border border-orange-500/20 bg-orange-500/10 text-orange-400 flex items-center justify-center mb-6">
                   <Stethoscope className="h-5 w-5" />
                 </div>
-                <h3 className="text-xl font-semibold mb-3">For Professionals</h3>
+                <h3 className="text-xl font-semibold mb-3">{t("eco.pro.title")}</h3>
                 <p className="text-sm text-muted-foreground mb-6">
-                  Verify your credentials and manage your clients seamlessly. Offer remote consultations, schedule appointments, and grow your practice.
+                  {t("eco.pro.desc")}
                 </p>
                 <ul className="space-y-2">
-                  {['Verified directory listing', 'Client roster management', 'Telehealth & messaging'].map((item, i) => (
+                  {[t("eco.pro.li1"), t("eco.pro.li2"), t("eco.pro.li3")].map((item, i) => (
                     <li key={i} className="flex items-center text-sm text-muted-foreground">
                       <CheckCircle2 className="h-4 w-4 mr-2 text-primary/70" /> {item}
                     </li>
@@ -326,12 +326,12 @@ function LandingPage() {
                 <div className="h-10 w-10 rounded-full border border-emerald-500/20 bg-emerald-500/10 text-emerald-400 flex items-center justify-center mb-6">
                   <Activity className="h-5 w-5" />
                 </div>
-                <h3 className="text-xl font-semibold mb-3">List Your Business</h3>
+                <h3 className="text-xl font-semibold mb-3">{t("eco.org.title")}</h3>
                 <p className="text-sm text-muted-foreground mb-6">
-                  Clinics, labs, and wellness centers can list their business on our super app. Reach new users, track engagement, and build integrations.
+                  {t("eco.org.desc")}
                 </p>
                 <ul className="space-y-2">
-                  {['Business profile management', 'User engagement analytics', 'Super app integrations'].map((item, i) => (
+                  {[t("eco.org.li1"), t("eco.org.li2"), t("eco.org.li3")].map((item, i) => (
                     <li key={i} className="flex items-center text-sm text-muted-foreground">
                       <CheckCircle2 className="h-4 w-4 mr-2 text-primary/70" /> {item}
                     </li>
@@ -349,120 +349,18 @@ function LandingPage() {
               <div className="inline-flex h-12 w-12 items-center justify-center rounded-2xl bg-primary/10 text-primary mb-4">
                 <Code2 className="h-6 w-6" />
               </div>
-              <h2 className="text-3xl font-bold tracking-tight mb-2">Publish Your Wellness Mini-App</h2>
-              <p className="text-muted-foreground max-w-xl mx-auto mb-6">Are you a digital health developer? Register your web application or service module to list it in the TenaGulecha App Marketplace.</p>
+              <h2 className="text-3xl font-bold tracking-tight mb-2">{t("publish.title")}</h2>
+              <p className="text-muted-foreground max-w-xl mx-auto mb-6">{t("publish.desc")}</p>
               
-              {!showForm && (
-                <button
-                  onClick={() => setShowForm(true)}
-                  className="rounded-full bg-primary/10 border border-primary/20 px-6 py-2.5 text-sm font-medium text-primary transition-all hover:bg-primary hover:text-primary-foreground shadow-[0_0_15px_rgba(var(--primary),0.2)]"
-                >
-                  Apply for the Mini App
-                </button>
-              )}
-            </div>
-
-            {showForm && (
-              <form onSubmit={handleSubmit} className="rounded-3xl border border-white/10 bg-card/50 backdrop-blur-xl p-8 space-y-6 shadow-xl">
-              <div className="grid md:grid-cols-2 gap-6">
-                <div className="space-y-2">
-                  <label className="text-sm font-semibold text-foreground/90">Mini-App Name <span className="text-rose-500">*</span></label>
-                  <input
-                    type="text"
-                    required
-                    placeholder="e.g. MyCalm Meditation"
-                    value={appName}
-                    onChange={(e) => setAppName(e.target.value)}
-                    className="w-full rounded-2xl border border-white/10 bg-background/50 px-4 py-3 text-sm focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent transition-all"
-                  />
-                </div>
-                <div className="space-y-2">
-                  <label className="text-sm font-semibold text-foreground/90">Developer/Company Name <span className="text-rose-500">*</span></label>
-                  <input
-                    type="text"
-                    required
-                    placeholder="e.g. Wellness Labs Ltd."
-                    value={devName}
-                    onChange={(e) => setDevName(e.target.value)}
-                    className="w-full rounded-2xl border border-white/10 bg-background/50 px-4 py-3 text-sm focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent transition-all"
-                  />
-                </div>
-              </div>
-
-              <div className="grid md:grid-cols-2 gap-6">
-                <div className="space-y-2">
-                  <label className="text-sm font-semibold text-foreground/90">Category <span className="text-rose-500">*</span></label>
-                  <select
-                    value={category}
-                    onChange={(e) => setCategory(e.target.value)}
-                    className="w-full rounded-2xl border border-white/10 bg-background/50 px-4 py-3 text-sm focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent transition-all"
-                  >
-                    <option>Mental Health</option>
-                    <option>Maternal Health</option>
-                    <option>Physical Therapy</option>
-                    <option>Fitness & Nutrition</option>
-                    <option>Cardiology</option>
-                    <option>General Wellness</option>
-                  </select>
-                </div>
-                <div className="space-y-2">
-                  <label className="text-sm font-semibold text-foreground/90">Tagline <span className="text-rose-500">*</span></label>
-                  <input
-                    type="text"
-                    required
-                    placeholder="e.g. Daily guided mindfulness and mental resilience."
-                    value={tagline}
-                    onChange={(e) => setTagline(e.target.value)}
-                    className="w-full rounded-2xl border border-white/10 bg-background/50 px-4 py-3 text-sm focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent transition-all"
-                  />
-                </div>
-              </div>
-
-              <div className="space-y-2">
-                <label className="text-sm font-semibold text-foreground/90">Description <span className="text-rose-500">*</span></label>
-                <textarea
-                  required
-                  rows={3}
-                  placeholder="Provide a detailed description of what the mini-app can do, what it provides, and how it tracks health data..."
-                  value={description}
-                  onChange={(e) => setDescription(e.target.value)}
-                  className="w-full rounded-2xl border border-white/10 bg-background/50 px-4 py-3 text-sm focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent transition-all resize-none"
-                />
-              </div>
-
-              <div className="grid md:grid-cols-2 gap-6">
-                <div className="space-y-2">
-                  <label className="text-sm font-semibold text-foreground/90">Key Features (comma-separated)</label>
-                  <input
-                    type="text"
-                    placeholder="e.g. Guided Meditation, Mood Tracker, Sleep Sounds"
-                    value={features}
-                    onChange={(e) => setFeatures(e.target.value)}
-                    className="w-full rounded-2xl border border-white/10 bg-background/50 px-4 py-3 text-sm focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent transition-all"
-                  />
-                </div>
-                <div className="space-y-2">
-                  <label className="text-sm font-semibold text-foreground/90">Key Benefits (comma-separated)</label>
-                  <input
-                    type="text"
-                    placeholder="e.g. Stress relief, Deeper sleep, Better focus"
-                    value={benefits}
-                    onChange={(e) => setBenefits(e.target.value)}
-                    className="w-full rounded-2xl border border-white/10 bg-background/50 px-4 py-3 text-sm focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent transition-all"
-                  />
-                </div>
-              </div>
-
               <div className="flex justify-center pt-4">
                 <Link
                   to="/dashboard"
                   className="w-full md:w-1/2 rounded-2xl bg-primary text-primary-foreground font-semibold py-3.5 text-sm hover:bg-primary/95 transition-all shadow-[0_0_20px_rgba(var(--primary),0.2)] flex items-center justify-center gap-2 hover:scale-[1.01]"
                 >
-                  <Rocket className="h-4 w-4" /> Publish Site to Show Full Version
+                  <Rocket className="h-4 w-4" /> {t("publish.btn")}
                 </Link>
               </div>
-            </form>
-            )}
+            </div>
           </div>
         </section>
       </main>
