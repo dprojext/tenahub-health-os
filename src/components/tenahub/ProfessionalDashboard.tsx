@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useRef, useEffect } from "react";
 import { toast } from "sonner";
 import {
   CalendarDays,
@@ -42,21 +42,50 @@ export function ProfessionalDashboard() {
   const [modalData, setModalData] = useState<{ title: string, data: any } | null>(null);
   
   // AI Chat State
+  const messagesEndRef = useRef<HTMLDivElement>(null);
+  
+  const scrollToBottom = () => {
+    messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
+  };
+  
   const [chatInput, setChatInput] = useState("");
   const [isTyping, setIsTyping] = useState(false);
-  const [messages, setMessages] = useState([
-    { 
-      role: "assistant", 
-      content: "Hello Dr. Selamawit. I'm TenaHub AI, your secure clinical assistant. I can answer questions about the TenaGulecha platform, provide differential diagnoses, or review anonymized patient symptoms. How can I assist you today?" 
+  type ChatMessage = { role: string, content: string };
+  const [messages, setMessages] = useState<ChatMessage[]>(() => {
+    if (typeof window !== "undefined") {
+      const stored = localStorage.getItem("tenahub_ai_chat");
+      if (stored) {
+        try {
+          return JSON.parse(stored);
+        } catch (e) {}
+      }
     }
-  ]);
+    return [
+      { 
+        role: "assistant", 
+        content: "Hello Dr. Selamawit. I'm TenaHub AI, your secure clinical assistant. I can answer questions about the TenaGulecha platform, provide differential diagnoses, or review anonymized patient symptoms. How can I assist you today?" 
+      }
+    ];
+  });
+
+  useEffect(() => {
+    if (activeTab === "ai") {
+      scrollToBottom();
+    }
+  }, [messages, isTyping, activeTab]);
 
   const handleSendMessage = (e: React.FormEvent) => {
     e.preventDefault();
     if (!chatInput.trim()) return;
 
     const userMsg = chatInput.trim();
-    setMessages(prev => [...prev, { role: "user", content: userMsg }]);
+    setMessages((prev: ChatMessage[]) => {
+      const updated = [...prev, { role: "user", content: userMsg }];
+      if (typeof window !== "undefined") {
+        localStorage.setItem("tenahub_ai_chat", JSON.stringify(updated));
+      }
+      return updated;
+    });
     setChatInput("");
     setIsTyping(true);
 
@@ -74,7 +103,13 @@ export function ProfessionalDashboard() {
         aiResponse = "Based on clinical guidelines, that's an insightful question. I've analyzed the latest medical databases and recommend reviewing the patient's full metabolic panel before adjusting the dosage. Let me know if you'd like me to pull up those specific lab results.";
       }
 
-      setMessages(prev => [...prev, { role: "assistant", content: aiResponse }]);
+      setMessages((prev: ChatMessage[]) => {
+        const updated = [...prev, { role: "assistant", content: aiResponse }];
+        if (typeof window !== "undefined") {
+          localStorage.setItem("tenahub_ai_chat", JSON.stringify(updated));
+        }
+        return updated;
+      });
       setIsTyping(false);
     }, 1000);
   };
@@ -405,7 +440,7 @@ export function ProfessionalDashboard() {
           <div className="rounded-3xl border border-border bg-card overflow-hidden flex flex-col h-[60vh] min-h-[400px]">
             {/* Chat History Area */}
             <div className="flex-1 overflow-y-auto p-6 space-y-6">
-              {messages.map((msg, idx) => (
+              {messages.map((msg: ChatMessage, idx: number) => (
                 <div key={idx} className={cn("flex gap-4", msg.role === "user" && "flex-row-reverse")}>
                   <div className={cn(
                     "flex h-8 w-8 shrink-0 items-center justify-center rounded-full",
