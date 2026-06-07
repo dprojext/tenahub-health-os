@@ -100,11 +100,11 @@ function SignupPage() {
               <div className="mb-6 flex justify-center">
                 <Link to="/" className="inline-flex items-center text-sm font-medium text-muted-foreground hover:text-foreground transition-colors">
                   <ArrowLeft className="mr-2 h-4 w-4" />
-                  Back to site
+                  {t("auth.back")}
                 </Link>
               </div>
-              <h2 className="text-2xl font-bold tracking-tight mb-2 text-center">Create an account</h2>
-              <p className="text-muted-foreground mb-6 text-center text-sm">Join the TenaGulecha ecosystem</p>
+              <h2 className="text-2xl font-bold tracking-tight mb-2 text-center">{t("auth.create")}</h2>
+              <p className="text-muted-foreground mb-6 text-center text-sm">{t("auth.join")}</p>
 
               <div className="mb-6 grid grid-cols-3 gap-2">
                 <button
@@ -116,7 +116,7 @@ function SignupPage() {
                   )}
                 >
                   <HeartPulse className="h-4 w-4" />
-                  User
+                  {t("auth.user")}
                 </button>
                 <button
                   type="button"
@@ -127,7 +127,7 @@ function SignupPage() {
                   )}
                 >
                   <Briefcase className="h-4 w-4" />
-                  Professional
+                  {t("auth.pro")}
                 </button>
                 <button
                   type="button"
@@ -138,14 +138,14 @@ function SignupPage() {
                   )}
                 >
                   <Stethoscope className="h-4 w-4" />
-                  Organizer
+                  {t("auth.org")}
                 </button>
               </div>
 
               <form onSubmit={handleStep1} className="space-y-4">
                 {role === "partner" && (
                   <div>
-                    <label className="block text-sm font-medium mb-1.5" htmlFor="companyName">Company Name</label>
+                    <label className="block text-sm font-medium mb-1.5" htmlFor="companyName">{t("auth.company")}</label>
                     <input 
                       id="companyName" 
                       type="text" 
@@ -159,7 +159,7 @@ function SignupPage() {
                 )}
                 <div>
                   <label className="block text-sm font-medium mb-1.5" htmlFor="name">
-                    {role === "partner" ? "Contact Representative Name" : "Full Name"}
+                    {role === "partner" ? t("auth.contact") : t("auth.fullname")}
                   </label>
                   <input 
                     id="name" 
@@ -173,7 +173,7 @@ function SignupPage() {
                 </div>
                 
                 <div>
-                  <label className="block text-sm font-medium mb-1.5" htmlFor="email">Email address</label>
+                  <label className="block text-sm font-medium mb-1.5" htmlFor="email">{t("auth.email")}</label>
                   <input 
                     id="email" 
                     type="email" 
@@ -187,7 +187,7 @@ function SignupPage() {
 
                 {(role === "user" || role === "partner" || role === "professional") && (
                   <div>
-                    <label className="block text-sm font-medium mb-1.5" htmlFor="phone">Phone Number</label>
+                    <label className="block text-sm font-medium mb-1.5" htmlFor="phone">{t("auth.phone")}</label>
                     <input 
                       id="phone" 
                       type="tel" 
@@ -201,7 +201,7 @@ function SignupPage() {
                 )}
 
                 <div>
-                  <label className="block text-sm font-medium mb-1.5" htmlFor="password">Password</label>
+                  <label className="block text-sm font-medium mb-1.5" htmlFor="password">{t("auth.password")}</label>
                   <div className="relative">
                     <input 
                       id="password" 
@@ -226,14 +226,13 @@ function SignupPage() {
                   type="submit"
                   className="w-full mt-4 inline-flex items-center justify-center rounded-lg bg-primary px-4 py-2.5 text-sm font-medium text-primary-foreground hover:bg-primary/90 transition-colors"
                 >
-                  Continue <ArrowRight className="ml-2 h-4 w-4" />
+                  {t("auth.continue")} <ArrowRight className="ml-2 h-4 w-4" />
                 </button>
               </form>
 
               <p className="mt-6 text-center text-sm text-muted-foreground">
-                Already have an account?{" "}
                 <Link to="/login" className="font-medium text-primary hover:underline">
-                  Log in
+                  {t("auth.haveaccount")}
                 </Link>
               </p>
             </div>

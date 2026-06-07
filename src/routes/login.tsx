@@ -60,11 +60,11 @@ function LoginPage() {
           <div className="mb-6 flex justify-center">
             <Link to="/" className="inline-flex items-center text-sm font-medium text-muted-foreground hover:text-foreground transition-colors">
               <ArrowLeft className="mr-2 h-4 w-4" />
-              Back to site
+              {t("auth.back")}
             </Link>
           </div>
-          <h2 className="text-2xl font-bold tracking-tight mb-2 text-center">Welcome back</h2>
-          <p className="text-muted-foreground mb-6 text-center text-sm">Enter your credentials to access your account</p>
+          <h2 className="text-2xl font-bold tracking-tight mb-2 text-center">{t("auth.welcome")}</h2>
+          <p className="text-muted-foreground mb-6 text-center text-sm">{t("auth.credentials")}</p>
 
           <div className="mb-6 grid grid-cols-3 gap-2">
             <button
@@ -76,7 +76,7 @@ function LoginPage() {
               )}
             >
               <HeartPulse className="h-4 w-4" />
-              User
+              {t("auth.user")}
             </button>
             <button
               type="button"
@@ -87,7 +87,7 @@ function LoginPage() {
               )}
             >
               <Briefcase className="h-4 w-4" />
-              Professional
+              {t("auth.pro")}
             </button>
             <button
               type="button"
@@ -98,13 +98,13 @@ function LoginPage() {
               )}
             >
               <Stethoscope className="h-4 w-4" />
-              Organizer
+              {t("auth.org")}
             </button>
           </div>
 
           <form onSubmit={handleLogin} className="space-y-4">
             <div>
-              <label className="block text-sm font-medium mb-1.5" htmlFor="email">Email address</label>
+              <label className="block text-sm font-medium mb-1.5" htmlFor="email">{t("auth.email")}</label>
               <input 
                 id="email" 
                 type="email" 
@@ -117,7 +117,7 @@ function LoginPage() {
             </div>
             
             <div>
-              <label className="block text-sm font-medium mb-1.5" htmlFor="password">Password</label>
+              <label className="block text-sm font-medium mb-1.5" htmlFor="password">{t("auth.password")}</label>
               <div className="relative">
                 <input 
                   id="password" 
@@ -141,16 +141,16 @@ function LoginPage() {
             <div className="flex items-center justify-between text-sm">
               <label className="flex items-center gap-2 cursor-pointer">
                 <input type="checkbox" className="rounded border-input text-primary focus:ring-primary" />
-                <span>Remember me</span>
+                <span>{t("auth.remember")}</span>
               </label>
-              <a href="#" className="font-medium text-primary hover:underline">Forgot password?</a>
+              <a href="#" className="font-medium text-primary hover:underline">{t("auth.forgot")}</a>
             </div>
 
             <button 
               type="submit"
               className="w-full mt-2 inline-flex items-center justify-center rounded-lg bg-primary px-4 py-2.5 text-sm font-medium text-primary-foreground hover:bg-primary/90 transition-colors"
             >
-              Sign in
+              {t("auth.signin")}
             </button>
           </form>
 
@@ -159,7 +159,7 @@ function LoginPage() {
               <span className="w-full border-t border-border" />
             </div>
             <div className="relative flex justify-center text-xs uppercase">
-              <span className="bg-card px-2 text-muted-foreground">Demo Accounts</span>
+              <span className="bg-card px-2 text-muted-foreground">{t("auth.demo")}</span>
             </div>
           </div>
 
@@ -170,7 +170,7 @@ function LoginPage() {
               className="flex items-center justify-center gap-2 rounded-lg border border-border bg-card p-3 text-sm font-medium text-foreground transition-colors hover:bg-accent"
             >
               <HeartPulse className="h-4 w-4" />
-              Demo User
+              {t("auth.demouser")}
             </button>
             
             <button
@@ -179,7 +179,7 @@ function LoginPage() {
               className="flex items-center justify-center gap-2 rounded-lg border border-border bg-card p-3 text-sm font-medium text-foreground transition-colors hover:bg-accent"
             >
               <Building2 className="h-4 w-4" />
-              Demo Organizer
+              {t("auth.demoorg")}
             </button>
             
             <button
@@ -188,7 +188,7 @@ function LoginPage() {
               className="flex items-center justify-center gap-2 rounded-lg border border-border bg-card p-3 text-sm font-medium text-foreground transition-colors hover:bg-accent"
             >
               <User className="h-4 w-4" />
-              Demo Professional
+              {t("auth.demopro")}
             </button>
 
             <button
@@ -197,14 +197,13 @@ function LoginPage() {
               className="flex items-center justify-center gap-2 rounded-lg border border-border bg-card p-3 text-sm font-medium text-foreground transition-colors hover:bg-accent"
             >
               <Shield className="h-4 w-4" />
-              Demo Super Admin
+              {t("auth.demoadmin")}
             </button>
           </div>
 
           <p className="mt-8 text-center text-sm text-muted-foreground">
-            Don't have an account?{" "}
             <Link to="/signup" className="font-medium text-primary hover:underline">
-              Sign up
+              {t("auth.noaccount")}
             </Link>
           </p>
         </div>

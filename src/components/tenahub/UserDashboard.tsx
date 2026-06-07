@@ -993,19 +993,19 @@ export function UserDashboard() {
               DA
             </div>
             <div>
-              <div className="text-xs uppercase tracking-widest opacity-75">Unified Health Profile</div>
+              <div className="text-xs uppercase tracking-widest opacity-75">{t("user.unified")}</div>
               <h1 className="text-2xl font-bold tracking-tight">Dawit Alemu</h1>
               <div className="mt-1 flex flex-wrap items-center gap-3 text-sm opacity-90">
                 <span className="inline-flex items-center gap-1"><Droplet className="h-3.5 w-3.5" /> O+</span>
                 <span className="inline-flex items-center gap-1"><Heart className="h-3.5 w-3.5" /> {logHistory[0].hr}</span>
-                <span className="inline-flex items-center gap-1"><Sparkles className="h-3.5 w-3.5" /> Synced today</span>
+                <span className="inline-flex items-center gap-1"><Sparkles className="h-3.5 w-3.5" /> {t("user.synced")}</span>
               </div>
             </div>
           </div>
           <div className="grid grid-cols-3 gap-3 text-center sm:gap-4">
-            <Stat label="Steps" value={logHistory[0].steps} />
-            <Stat label="Sleep" value={logHistory[0].sleep} />
-            <Stat label="Modules" value={String(2 + activatedModules.length)} />
+            <Stat label={t("user.steps")} value={logHistory[0].steps} />
+            <Stat label={t("user.sleep")} value={logHistory[0].sleep} />
+            <Stat label={t("user.modules")} value={String(2 + activatedModules.length)} />
           </div>
         </div>
       </section>
@@ -1031,33 +1031,33 @@ export function UserDashboard() {
 
               {/* Manual Health Logger */}
               <div className="rounded-3xl border border-border bg-card p-6">
-                <SectionTitle title="Manual Health Logger" subtitle="If your devices aren't synced, you can manually log your daily metrics here." />
+                <SectionTitle title={t("user.logger.title")} subtitle={t("user.logger.subtitle")} />
                 <form onSubmit={handleLogHealth} className="space-y-4">
                   <div className="grid grid-cols-3 gap-4">
                     <div className="space-y-2">
-                      <Label className="text-xs">Steps</Label>
+                      <Label className="text-xs">{t("user.steps")}</Label>
                       <Input type="number" placeholder="e.g. 8000" value={logSteps} onChange={(e) => setLogSteps(e.target.value)} />
                     </div>
                     <div className="space-y-2">
-                      <Label className="text-xs">Sleep (Hrs)</Label>
+                      <Label className="text-xs">{t("user.sleep")}</Label>
                       <Input type="number" step="0.1" placeholder="e.g. 7.5" value={logSleep} onChange={(e) => setLogSleep(e.target.value)} />
                     </div>
                     <div className="space-y-2">
-                      <Label className="text-xs">Heart Rate</Label>
+                      <Label className="text-xs">{t("user.tracker.heart")}</Label>
                       <Input type="number" placeholder="e.g. 72" value={logHeartRate} onChange={(e) => setLogHeartRate(e.target.value)} />
                     </div>
                   </div>
-                  <Button type="submit" className="w-full"><Save className="mr-2 h-4 w-4" /> Save Metrics</Button>
+                  <Button type="submit" className="w-full"><Save className="mr-2 h-4 w-4" /> {t("user.logger.save")}</Button>
                 </form>
               </div>
 
               {/* Recent History */}
               <div className="rounded-3xl border border-border bg-card p-6">
-                <SectionTitle title="Recent Logs" subtitle="Your health metric history." />
+                <SectionTitle title={t("user.recent.title")} subtitle={t("user.recent.subtitle")} />
                 <div className="space-y-3">
                   {logHistory.map((log, i) => (
                     <div key={i} className="flex items-center justify-between p-3 rounded-xl bg-white/5 border border-white/10">
-                      <div className="font-medium text-sm">{log.date}</div>
+                      <div className="font-medium text-sm">{i === 0 ? t("user.recent.today") : i === 1 ? t("user.recent.yesterday") : t("user.recent.2days")}</div>
                       <div className="flex gap-4 text-sm text-muted-foreground">
                         <span className="flex items-center gap-1" title="Steps"><Activity className="h-3 w-3" /> {log.steps}</span>
                         <span className="flex items-center gap-1" title="Sleep"><Clock className="h-3 w-3" /> {log.sleep}</span>
@@ -1069,7 +1069,7 @@ export function UserDashboard() {
               </div>
             </div>
 
-            <SectionTitle title="Upcoming Appointments" subtitle="Scheduled through your connected modules." />
+            <SectionTitle title={t("user.appointments.title")} subtitle={t("user.appointments.subtitle")} />
             <div className="grid gap-4 md:grid-cols-2">
               {appointments.map((a) => (
                 <div key={a.id} className="flex items-center justify-between rounded-2xl border border-border bg-card p-5 cursor-pointer hover:bg-accent transition">
@@ -1079,7 +1079,7 @@ export function UserDashboard() {
                   </div>
                   <div className="flex flex-col items-end">
                     <div className="text-sm font-bold text-primary">{a.date}</div>
-                    <span className="mt-1 text-[10px] uppercase tracking-widest text-emerald-500 bg-emerald-500/10 px-2 py-0.5 rounded-full">Confirmed</span>
+                    <span className="mt-1 text-[10px] uppercase tracking-widest text-emerald-500 bg-emerald-500/10 px-2 py-0.5 rounded-full">{t("user.appointments.confirmed")}</span>
                   </div>
                 </div>
               ))}
@@ -1090,7 +1090,7 @@ export function UserDashboard() {
         {/* ═══════════════ HEALTH DATA TAB (Samsung Health Style) ═══════════════ */}
         {activeTab === "healthdata" && (
           <div className="space-y-6 animate-in fade-in slide-in-from-bottom-2 duration-300">
-            <SectionTitle title="Health Data Tracker" subtitle="Track all your health metrics like steps, sleep, heart rate, diet, water intake, calories, and weight." />
+            <SectionTitle title={t("user.tracker.title")} subtitle={t("user.tracker.subtitle")} />
 
             {/* Category Selector */}
             <div className="flex flex-wrap justify-center gap-2">
@@ -1106,7 +1106,13 @@ export function UserDashboard() {
                   )}
                 >
                   <cat.Icon className="h-4 w-4" />
-                  {cat.label}
+                  {cat.key === "steps" ? t("user.steps") : 
+                   cat.key === "sleep" ? t("user.sleep") : 
+                   cat.key === "heartRate" ? t("user.tracker.heart") : 
+                   cat.key === "diet" ? t("user.tracker.diet") : 
+                   cat.key === "water" ? t("user.tracker.water") : 
+                   cat.key === "calories" ? t("user.tracker.calories") : 
+                   t("user.tracker.weight")}
                 </button>
               ))}
             </div>
@@ -1120,8 +1126,16 @@ export function UserDashboard() {
                     <activeCatConfig.Icon className={cn("h-6 w-6", activeCatConfig.color)} />
                   </div>
                   <div>
-                    <h3 className="text-lg font-bold">{activeCatConfig.label} Summary</h3>
-                    <p className="text-xs text-muted-foreground">Latest: {healthData[healthCategory][0]?.value} {activeCatConfig.unit}</p>
+                    <h3 className="text-lg font-bold">
+                      {activeCatConfig.key === "steps" ? t("user.steps") : 
+                       activeCatConfig.key === "sleep" ? t("user.sleep") : 
+                       activeCatConfig.key === "heartRate" ? t("user.tracker.heart") : 
+                       activeCatConfig.key === "diet" ? t("user.tracker.diet") : 
+                       activeCatConfig.key === "water" ? t("user.tracker.water") : 
+                       activeCatConfig.key === "calories" ? t("user.tracker.calories") : 
+                       t("user.tracker.weight")} Summary
+                    </h3>
+                    <p className="text-xs text-muted-foreground">{t("user.tracker.latest")}: {healthData[healthCategory][0]?.value} {activeCatConfig.unit}</p>
                   </div>
                 </div>
 
@@ -1167,7 +1181,7 @@ export function UserDashboard() {
 
               {/* Add New Entry */}
               <div className="rounded-3xl border border-border bg-card p-6">
-                <SectionTitle title={`Log ${activeCatConfig.label}`} subtitle={`Add a new ${activeCatConfig.label.toLowerCase()} entry to your health data.`} />
+                <SectionTitle title={`${t("user.tracker.log")} ${activeCatConfig.label}`} subtitle={t("user.tracker.add")} />
                 <form onSubmit={handleAddHealthData} className="space-y-4">
                   <div className="space-y-2">
                     <Label className="text-xs">{activeCatConfig.label} ({activeCatConfig.unit})</Label>
@@ -1180,7 +1194,7 @@ export function UserDashboard() {
                     />
                   </div>
                   <div className="space-y-2">
-                    <Label className="text-xs">Note (optional)</Label>
+                    <Label className="text-xs">{t("user.tracker.note")}</Label>
                     <Input
                       type="text"
                       placeholder="e.g. After morning walk"
@@ -1189,7 +1203,7 @@ export function UserDashboard() {
                     />
                   </div>
                   <Button type="submit" className="w-full">
-                    <Plus className="mr-2 h-4 w-4" /> Log {activeCatConfig.label}
+                    <Plus className="mr-2 h-4 w-4" /> {t("user.tracker.log")} {activeCatConfig.label}
                   </Button>
                 </form>
               </div>
@@ -1197,14 +1211,14 @@ export function UserDashboard() {
 
             {/* History Table */}
             <div className="rounded-3xl border border-border bg-card p-6 overflow-hidden">
-              <h3 className="font-semibold text-lg mb-4">{activeCatConfig.label} History</h3>
+              <h3 className="font-semibold text-lg mb-4">{activeCatConfig.label} {t("user.tracker.history")}</h3>
               <div className="overflow-x-auto">
                 <table className="w-full text-sm text-left">
                   <thead className="text-xs text-muted-foreground uppercase bg-muted/50">
                     <tr>
-                      <th className="px-4 py-3 rounded-l-xl">Date</th>
-                      <th className="px-4 py-3">Value</th>
-                      <th className="px-4 py-3 rounded-r-xl">Note</th>
+                      <th className="px-4 py-3 rounded-l-xl">{t("user.tracker.date")}</th>
+                      <th className="px-4 py-3">{t("user.tracker.value")}</th>
+                      <th className="px-4 py-3 rounded-r-xl">{t("user.tracker.note")}</th>
                     </tr>
                   </thead>
                   <tbody>
@@ -1228,7 +1242,7 @@ export function UserDashboard() {
         {/* ═══════════════ MINI-APPS TAB ═══════════════ */}
         {activeTab === "miniapps" && (
           <div className="space-y-6 animate-in fade-in slide-in-from-bottom-2 duration-300">
-            <SectionTitle title="Active Modules" subtitle="Your currently integrated health applications." />
+            <SectionTitle title={t("user.modules.title")} subtitle={t("user.modules.subtitle")} />
             <div className="grid gap-4 md:grid-cols-3">
               {activatedModules.map((id) => {
                 const m = marketplace.find((x) => x.id === id)!;
@@ -1243,12 +1257,12 @@ export function UserDashboard() {
               })}
               {activatedModules.length === 0 && (
                 <div className="col-span-3 text-center py-8 text-muted-foreground text-sm border border-dashed border-border rounded-2xl">
-                  You have no partner modules active yet. Browse the directory below to connect apps to your profile.
+                  {t("user.modules.empty")}
                 </div>
               )}
             </div>
 
-            <SectionTitle title="Marketplace Directory" subtitle="Plug-and-play wellness mini-apps from our partners." />
+            <SectionTitle title={t("user.modules.dir")} subtitle={t("user.modules.dirsub")} />
             <div className="grid gap-4 md:grid-cols-3">
               {marketplace.map((m) => {
                 const isActive = activatedModules.includes(m.id);
@@ -1268,7 +1282,7 @@ export function UserDashboard() {
                       variant={isActive ? "secondary" : "default"}
                       className="mt-4 w-full"
                     >
-                      {loadingId === m.id ? <><Loader2 className="mr-2 h-4 w-4 animate-spin" /> Securing…</> : isActive ? <><CheckCircle2 className="mr-2 h-4 w-4" /> Activated</> : <><Plus className="mr-2 h-4 w-4" /> Activate Module</>}
+                      {loadingId === m.id ? <><Loader2 className="mr-2 h-4 w-4 animate-spin" /> Securing…</> : isActive ? <><CheckCircle2 className="mr-2 h-4 w-4" /> Activated</> : <><Plus className="mr-2 h-4 w-4" /> {t("user.modules.activate")}</>}
                     </Button>
                   </div>
                 );
@@ -1280,7 +1294,7 @@ export function UserDashboard() {
         {/* ═══════════════ PROFESSIONALS TAB ═══════════════ */}
         {activeTab === "professionals" && (
           <div className="space-y-6 animate-in fade-in slide-in-from-bottom-2 duration-300">
-            <SectionTitle title="Find a Professional" subtitle="Connect with certified health experts on our platform." />
+            <SectionTitle title={t("user.pro.find")} subtitle={t("user.pro.subtitle")} />
             <div className="grid gap-4 md:grid-cols-3">
               {professionals.map((p) => {
                 const ProIcon = getIcon(p.Icon);
@@ -1300,12 +1314,12 @@ export function UserDashboard() {
                     <div className="mt-2 text-xs text-muted-foreground flex items-center gap-2">
                       <MapPin className="h-3 w-3" /> {p.location} · {p.consultationFee}
                     </div>
-                    <div className="mt-4 pt-4 border-t border-border flex justify-between items-center">
-                      <span className="text-sm font-semibold flex items-center gap-1">⭐ {p.rating}</span>
-                      <Button size="sm" onClick={(e) => { e.stopPropagation(); setBookingProfessional(p); }}>
-                        <CalendarPlus className="mr-1.5 h-3.5 w-3.5" /> Book Now
-                      </Button>
-                    </div>
+                      <div className="mt-4 pt-4 border-t border-border flex justify-between items-center">
+                        <span className="text-sm font-semibold flex items-center gap-1">⭐ {p.rating}</span>
+                        <Button size="sm" onClick={(e) => { e.stopPropagation(); setBookingProfessional(p); }}>
+                          <CalendarPlus className="mr-1.5 h-3.5 w-3.5" /> {t("user.pro.book")}
+                        </Button>
+                      </div>
                   </div>
                 );
               })}
@@ -1327,7 +1341,7 @@ export function UserDashboard() {
 
           return (
             <div className="space-y-6 animate-in fade-in slide-in-from-bottom-2 duration-300">
-              <SectionTitle title="Partner Clinics & Labs" subtitle="Discover organizations integrated with TenaGulecha." />
+              <SectionTitle title={t("user.org.title")} subtitle={t("user.org.subtitle")} />
               
               {/* Category Filter Row */}
               <div className="flex flex-wrap justify-center gap-2 mb-6">
@@ -1368,7 +1382,7 @@ export function UserDashboard() {
                       <div className="mt-4 pt-4 border-t border-border flex justify-between items-center">
                         <span className="text-xs text-muted-foreground truncate w-1/2">{o.operatingHours}</span>
                         <Button size="sm" variant="secondary" onClick={(e) => { e.stopPropagation(); setPortalOrg(o); }}>
-                          <Building2 className="mr-1.5 h-3.5 w-3.5" /> Visit Portal
+                          <Building2 className="mr-1.5 h-3.5 w-3.5" /> {t("user.org.visit")}
                         </Button>
                       </div>
                     </div>
@@ -1383,8 +1397,8 @@ export function UserDashboard() {
         {activeTab === "analytics" && (
           <div className="space-y-6 animate-in fade-in slide-in-from-bottom-2 duration-300">
             <div className="flex items-center justify-between">
-              <SectionTitle title="Health Analytics" subtitle="Comprehensive view of your wellness metrics over time." />
-              <Button variant="outline" onClick={() => toast.success("Downloading comprehensive PDF report...")}><Download className="mr-2 h-4 w-4" /> Export Report</Button>
+              <SectionTitle title={t("user.analytics.title")} subtitle={t("user.analytics.subtitle")} />
+              <Button variant="outline" onClick={() => toast.success("Downloading comprehensive PDF report...")}><Download className="mr-2 h-4 w-4" /> {t("user.analytics.export")}</Button>
             </div>
 
             <div className="grid gap-6 md:grid-cols-2">
@@ -1392,9 +1406,9 @@ export function UserDashboard() {
                 <div>
                   <div className="flex items-center gap-2 mb-2">
                     <Activity className="h-5 w-5 text-primary" />
-                    <h3 className="font-semibold text-lg">Activity Trend</h3>
+                    <h3 className="font-semibold text-lg">{t("user.analytics.trend")}</h3>
                   </div>
-                  <p className="text-sm text-muted-foreground">You've averaged 8,500 steps this week, up 12% from last week. Keep it up!</p>
+                  <p className="text-sm text-muted-foreground">{t("user.analytics.trendsub")}</p>
                 </div>
                 <div className="mt-8 flex h-40 items-end gap-3 px-2">
                   {[40, 70, 50, 90, 80, 60, 100].map((h, i) => (
@@ -1409,27 +1423,27 @@ export function UserDashboard() {
               <div className="rounded-3xl border border-border bg-card p-6 flex flex-col h-80">
                 <div className="flex items-center gap-2 mb-4">
                   <TrendingUp className="h-5 w-5 text-emerald-500" />
-                  <h3 className="font-semibold text-lg">Wellness Score Breakdown</h3>
+                  <h3 className="font-semibold text-lg">{t("user.analytics.score")}</h3>
                 </div>
                 <div className="flex flex-1 items-center justify-between gap-8">
                   <div className="relative h-36 w-36 shrink-0 rounded-full border-8 border-emerald-500/20 flex items-center justify-center shadow-inner">
                     <div className="absolute inset-0 rounded-full border-8 border-emerald-500 border-r-transparent border-b-transparent transform rotate-45"></div>
                     <div className="text-center">
                       <span className="text-4xl font-extrabold text-foreground">84</span>
-                      <div className="text-[10px] uppercase font-bold text-muted-foreground tracking-widest mt-1">Excellent</div>
+                      <div className="text-[10px] uppercase font-bold text-muted-foreground tracking-widest mt-1">{t("user.analytics.excellent")}</div>
                     </div>
                   </div>
                   <div className="flex-1 space-y-4">
                     <div>
-                      <div className="flex justify-between text-xs mb-1"><span className="font-medium">Activity</span><span>90%</span></div>
+                      <div className="flex justify-between text-xs mb-1"><span className="font-medium">{t("user.analytics.activity")}</span><span>90%</span></div>
                       <div className="h-1.5 w-full bg-border rounded-full overflow-hidden"><div className="h-full bg-blue-500 w-[90%]"></div></div>
                     </div>
                     <div>
-                      <div className="flex justify-between text-xs mb-1"><span className="font-medium">Sleep Recovery</span><span>75%</span></div>
+                      <div className="flex justify-between text-xs mb-1"><span className="font-medium">{t("user.analytics.recovery")}</span><span>75%</span></div>
                       <div className="h-1.5 w-full bg-border rounded-full overflow-hidden"><div className="h-full bg-indigo-500 w-[75%]"></div></div>
                     </div>
                     <div>
-                      <div className="flex justify-between text-xs mb-1"><span className="font-medium">Heart Health</span><span>88%</span></div>
+                      <div className="flex justify-between text-xs mb-1"><span className="font-medium">{t("user.analytics.heart")}</span><span>88%</span></div>
                       <div className="h-1.5 w-full bg-border rounded-full overflow-hidden"><div className="h-full bg-rose-500 w-[88%]"></div></div>
                     </div>
                   </div>
@@ -1438,15 +1452,15 @@ export function UserDashboard() {
             </div>
 
             <div className="rounded-3xl border border-border bg-card p-6 overflow-hidden">
-              <h3 className="font-semibold text-lg mb-4">Weekly Averages History</h3>
+              <h3 className="font-semibold text-lg mb-4">{t("user.analytics.history")}</h3>
               <div className="overflow-x-auto">
                 <table className="w-full text-sm text-left">
                   <thead className="text-xs text-muted-foreground uppercase bg-muted/50">
                     <tr>
-                      <th className="px-4 py-3 rounded-l-xl">Week Of</th>
-                      <th className="px-4 py-3">Avg Steps</th>
-                      <th className="px-4 py-3">Avg Sleep</th>
-                      <th className="px-4 py-3 rounded-r-xl">Resting HR</th>
+                      <th className="px-4 py-3 rounded-l-xl">{t("user.analytics.week")}</th>
+                      <th className="px-4 py-3">{t("user.analytics.avgsteps")}</th>
+                      <th className="px-4 py-3">{t("user.analytics.avgsleep")}</th>
+                      <th className="px-4 py-3 rounded-r-xl">{t("user.analytics.resthr")}</th>
                     </tr>
                   </thead>
                   <tbody>
@@ -1480,8 +1494,8 @@ export function UserDashboard() {
           <div className="space-y-6 animate-in fade-in slide-in-from-bottom-2 duration-300">
             <div className="flex items-center justify-between">
               <div>
-                <h2 className="text-2xl font-bold tracking-tight mb-2">TenaHub AI Assistant</h2>
-                <p className="text-sm text-muted-foreground mb-6">Ask about the platform, get help finding professionals, or understand your health metrics.</p>
+                <h2 className="text-2xl font-bold tracking-tight mb-2">{t("user.ai.title")}</h2>
+                <p className="text-sm text-muted-foreground mb-6">{t("user.ai.subtitle")}</p>
               </div>
               <div className="hidden md:flex h-12 w-12 items-center justify-center rounded-2xl bg-primary/10 text-primary">
                 <Bot className="h-6 w-6" />
@@ -1542,7 +1556,79 @@ export function UserDashboard() {
 
         {/* ═══════════════ PROFILE TAB ═══════════════ */}
         {activeTab === "profile" && (
-          <ProfilePage role="user" onBack={() => setActiveTab("dashboard")} />
+          <div className="space-y-6 animate-in fade-in slide-in-from-bottom-2 duration-300">
+            <div className="flex items-center justify-between mb-6">
+              <SectionTitle title={t("user.profile.title")} subtitle={t("user.profile.subtitle")} />
+              <Button variant="outline"><User className="mr-2 h-4 w-4" /> {t("user.profile.edit")}</Button>
+            </div>
+            
+            <div className="grid md:grid-cols-2 gap-6">
+              {/* Account Info */}
+              <div className="rounded-3xl border border-border bg-card p-6">
+                <h3 className="font-semibold text-lg mb-4 flex items-center gap-2"><User className="h-5 w-5 text-primary" /> {t("user.profile.info")}</h3>
+                <div className="space-y-4">
+                  <div className="pb-3 border-b border-white/5">
+                    <div className="text-xs text-muted-foreground uppercase tracking-wider mb-1">Full Name</div>
+                    <div className="font-medium">Dawit Alemu</div>
+                  </div>
+                  <div className="pb-3 border-b border-white/5">
+                    <div className="text-xs text-muted-foreground uppercase tracking-wider mb-1">Email</div>
+                    <div className="font-medium">dawit@example.com</div>
+                  </div>
+                  <div className="pb-3 border-b border-white/5">
+                    <div className="text-xs text-muted-foreground uppercase tracking-wider mb-1">Phone</div>
+                    <div className="font-medium">+251 911 234567</div>
+                  </div>
+                </div>
+              </div>
+
+              {/* Health Data */}
+              <div className="rounded-3xl border border-border bg-card p-6">
+                <h3 className="font-semibold text-lg mb-4 flex items-center gap-2"><Activity className="h-5 w-5 text-rose-500" /> {t("user.profile.healthdata")}</h3>
+                <div className="grid grid-cols-2 gap-4">
+                  <div className="pb-3 border-b border-white/5">
+                    <div className="text-xs text-muted-foreground uppercase tracking-wider mb-1">{t("user.profile.dob")}</div>
+                    <div className="font-medium">1992-04-15</div>
+                  </div>
+                  <div className="pb-3 border-b border-white/5">
+                    <div className="text-xs text-muted-foreground uppercase tracking-wider mb-1">{t("user.profile.gender")}</div>
+                    <div className="font-medium">Male</div>
+                  </div>
+                  <div className="pb-3 border-b border-white/5">
+                    <div className="text-xs text-muted-foreground uppercase tracking-wider mb-1">{t("user.profile.goal")}</div>
+                    <div className="font-medium">Improve Fitness & Activity</div>
+                  </div>
+                  <div className="pb-3 border-b border-white/5">
+                    <div className="text-xs text-muted-foreground uppercase tracking-wider mb-1">{t("user.profile.blood")}</div>
+                    <div className="font-medium text-rose-500">O+</div>
+                  </div>
+                  <div className="pb-3 border-b border-white/5">
+                    <div className="text-xs text-muted-foreground uppercase tracking-wider mb-1">{t("user.profile.disabilities")}</div>
+                    <div className="font-medium">None</div>
+                  </div>
+                  <div className="pb-3 border-b border-white/5">
+                    <div className="text-xs text-muted-foreground uppercase tracking-wider mb-1">{t("user.profile.chronic")}</div>
+                    <div className="font-medium">None</div>
+                  </div>
+                </div>
+              </div>
+
+              {/* Emergency Contact */}
+              <div className="col-span-1 md:col-span-2 rounded-3xl border border-border bg-card p-6">
+                <h3 className="font-semibold text-lg mb-4 flex items-center gap-2"><Shield className="h-5 w-5 text-amber-500" /> Emergency Contact</h3>
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                  <div className="pb-3 border-b border-white/5">
+                    <div className="text-xs text-muted-foreground uppercase tracking-wider mb-1">{t("user.profile.emname")}</div>
+                    <div className="font-medium">Aster Mekonnen</div>
+                  </div>
+                  <div className="pb-3 border-b border-white/5">
+                    <div className="text-xs text-muted-foreground uppercase tracking-wider mb-1">{t("user.profile.emphone")}</div>
+                    <div className="font-medium">+251 911 000000</div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
         )}
       </div>
     </div>
