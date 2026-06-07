@@ -471,6 +471,7 @@ export function ProfessionalDashboard() {
                   </div>
                 </div>
               )}
+              <div ref={messagesEndRef} />
             </div>
 
             {/* Input Area */}
