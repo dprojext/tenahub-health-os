@@ -40,6 +40,44 @@ export function ProfessionalDashboard() {
   const { t } = useTranslation();
   const [activeTab, setActiveTab] = useState<ProTab>("dashboard");
   const [modalData, setModalData] = useState<{ title: string, data: any } | null>(null);
+  
+  // AI Chat State
+  const [chatInput, setChatInput] = useState("");
+  const [isTyping, setIsTyping] = useState(false);
+  const [messages, setMessages] = useState([
+    { 
+      role: "assistant", 
+      content: "Hello Dr. Selamawit. I'm TenaHub AI, your secure clinical assistant. I can answer questions about the TenaGulecha platform, provide differential diagnoses, or review anonymized patient symptoms. How can I assist you today?" 
+    }
+  ]);
+
+  const handleSendMessage = (e: React.FormEvent) => {
+    e.preventDefault();
+    if (!chatInput.trim()) return;
+
+    const userMsg = chatInput.trim();
+    setMessages(prev => [...prev, { role: "user", content: userMsg }]);
+    setChatInput("");
+    setIsTyping(true);
+
+    setTimeout(() => {
+      let aiResponse = "";
+      const lowerInput = userMsg.toLowerCase();
+      
+      if (lowerInput.includes("platform") || lowerInput.includes("tenahub") || lowerInput.includes("tenagulecha") || lowerInput.includes("about")) {
+        aiResponse = "TenaGulecha is East Africa's first Health Super App! We provide a unified ecosystem that connects patients with professionals, allows organizations to list their clinics and labs, and offers a marketplace for specialized wellness mini-apps. You can use this dashboard to manage your appointments, view patient health data synced from wearables, and conduct telehealth sessions.";
+      } else if (lowerInput.includes("patient") || lowerInput.includes("record") || lowerInput.includes("history")) {
+        aiResponse = "To view a patient's health record, simply navigate to the 'Dashboard' tab and click on any patient in your Patient Roster. This will open a detailed view of their medical history, recent lab results, and real-time biometric data synced from their connected modules.";
+      } else if (lowerInput.includes("book") || lowerInput.includes("schedule") || lowerInput.includes("appointment")) {
+        aiResponse = "Your appointments are automatically synced from the patient portal. You can view your full schedule under the 'Meetings' tab, where you can also launch secure video telehealth calls with a single click.";
+      } else {
+        aiResponse = "Based on clinical guidelines, that's an insightful question. I've analyzed the latest medical databases and recommend reviewing the patient's full metabolic panel before adjusting the dosage. Let me know if you'd like me to pull up those specific lab results.";
+      }
+
+      setMessages(prev => [...prev, { role: "assistant", content: aiResponse }]);
+      setIsTyping(false);
+    }, 1000);
+  };
 
   return (
     <div className="space-y-6 relative">
@@ -367,48 +405,50 @@ export function ProfessionalDashboard() {
           <div className="rounded-3xl border border-border bg-card overflow-hidden flex flex-col h-[60vh] min-h-[400px]">
             {/* Chat History Area */}
             <div className="flex-1 overflow-y-auto p-6 space-y-6">
-              <div className="flex gap-4">
-                <div className="flex h-8 w-8 shrink-0 items-center justify-center rounded-full bg-primary/20 text-primary">
-                  <Bot className="h-4 w-4" />
+              {messages.map((msg, idx) => (
+                <div key={idx} className={cn("flex gap-4", msg.role === "user" && "flex-row-reverse")}>
+                  <div className={cn(
+                    "flex h-8 w-8 shrink-0 items-center justify-center rounded-full",
+                    msg.role === "user" ? "bg-emerald-500/20 text-emerald-500" : "bg-primary/20 text-primary"
+                  )}>
+                    {msg.role === "user" ? <User className="h-4 w-4" /> : <Bot className="h-4 w-4" />}
+                  </div>
+                  <div className={cn(
+                    "rounded-2xl px-4 py-3 text-sm max-w-[80%] leading-relaxed",
+                    msg.role === "user" ? "bg-primary text-primary-foreground" : "bg-white/5 border border-white/10 text-foreground"
+                  )}>
+                    {msg.content}
+                  </div>
                 </div>
-                <div className="rounded-2xl bg-white/5 border border-white/10 px-4 py-3 text-sm max-w-[80%] leading-relaxed text-foreground">
-                  Hello Dr. Selamawit. I'm your secure clinical AI assistant. You can ask me about medication protocols, latest cardiology guidelines, or review anonymized patient symptoms. How can I assist you today?
+              ))}
+              
+              {isTyping && (
+                <div className="flex gap-4">
+                  <div className="flex h-8 w-8 shrink-0 items-center justify-center rounded-full bg-primary/20 text-primary">
+                    <Bot className="h-4 w-4" />
+                  </div>
+                  <div className="rounded-2xl bg-white/5 border border-white/10 px-4 py-3 text-sm text-muted-foreground flex items-center gap-1">
+                    <span className="w-1.5 h-1.5 bg-primary/50 rounded-full animate-bounce"></span>
+                    <span className="w-1.5 h-1.5 bg-primary/50 rounded-full animate-bounce" style={{ animationDelay: "0.2s" }}></span>
+                    <span className="w-1.5 h-1.5 bg-primary/50 rounded-full animate-bounce" style={{ animationDelay: "0.4s" }}></span>
+                  </div>
                 </div>
-              </div>
-              <div className="flex gap-4 flex-row-reverse">
-                <div className="flex h-8 w-8 shrink-0 items-center justify-center rounded-full bg-emerald-500/20 text-emerald-500">
-                  <User className="h-4 w-4" />
-                </div>
-                <div className="rounded-2xl bg-primary px-4 py-3 text-sm max-w-[80%] leading-relaxed text-primary-foreground">
-                  What are the updated guidelines for initiating ACE inhibitors in patients with stage 2 hypertension and a history of asthma?
-                </div>
-              </div>
-              <div className="flex gap-4">
-                <div className="flex h-8 w-8 shrink-0 items-center justify-center rounded-full bg-primary/20 text-primary">
-                  <Bot className="h-4 w-4" />
-                </div>
-                <div className="rounded-2xl bg-white/5 border border-white/10 px-4 py-3 text-sm max-w-[80%] leading-relaxed text-foreground space-y-3">
-                  <p>Based on the latest clinical guidelines (ACC/AHA 2024 update):</p>
-                  <ul className="list-disc pl-4 space-y-1">
-                    <li>ACE inhibitors are generally first-line therapy for Stage 2 HTN.</li>
-                    <li>However, in patients with asthma, ARBs (Angiotensin II Receptor Blockers) such as Losartan or Valsartan are often preferred over ACE inhibitors due to the lower risk of inducing a persistent cough or exacerbating asthma symptoms (bradykinin accumulation).</li>
-                  </ul>
-                  <p className="text-xs text-muted-foreground mt-2 italic">Source: Clinical Knowledge Base v4.1</p>
-                </div>
-              </div>
+              )}
             </div>
 
             {/* Input Area */}
-            <div className="p-4 border-t border-border bg-card flex gap-3 items-center">
+            <form onSubmit={handleSendMessage} className="p-4 border-t border-border bg-card flex gap-3 items-center">
               <input 
                 type="text" 
-                placeholder="Ask clinical queries..." 
+                value={chatInput}
+                onChange={(e) => setChatInput(e.target.value)}
+                placeholder="Ask about TenaGulecha or clinical queries..." 
                 className="flex-1 bg-background border border-input rounded-full px-4 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-primary/50"
               />
-              <Button size="icon" className="rounded-full shrink-0" onClick={() => toast.success("AI Query Submitted!")}>
+              <Button type="submit" size="icon" className="rounded-full shrink-0" disabled={isTyping || !chatInput.trim()}>
                 <Send className="h-4 w-4 ml-0.5" />
               </Button>
-            </div>
+            </form>
           </div>
         </div>
       )}
