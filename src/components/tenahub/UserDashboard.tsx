@@ -385,37 +385,9 @@ export function UserDashboard() {
     return initialAppointments;
   });
 
-  const [organizations, setOrganizations] = useState<any[]>(() => {
-    const stored = localStorage.getItem("tenahub_organizations");
-    if (stored) {
-      try { return JSON.parse(stored); } catch(e) {}
-    }
-    localStorage.setItem("tenahub_organizations", JSON.stringify(defaultOrganizations));
-    return defaultOrganizations;
-  });
-
-  const [professionals, setProfessionals] = useState<any[]>(() => {
-    if (typeof window !== "undefined") {
-      const stored = localStorage.getItem("tenahub_professionals");
-      if (stored) {
-        try { 
-          const parsed = JSON.parse(stored);
-          if (Array.isArray(parsed)) return parsed;
-        } catch(e) {}
-      }
-      localStorage.setItem("tenahub_professionals", JSON.stringify(defaultProfessionals));
-    }
-    return defaultProfessionals;
-  });
-
-  const [marketplace, setMarketplace] = useState<Marketplace[]>(() => {
-    const stored = localStorage.getItem("tenahub_marketplace");
-    if (stored) {
-      try { return JSON.parse(stored); } catch(e) {}
-    }
-    localStorage.setItem("tenahub_marketplace", JSON.stringify(defaultMarketplace));
-    return defaultMarketplace;
-  });
+  const [organizations, setOrganizations] = useState<any[]>(defaultOrganizations);
+  const [professionals, setProfessionals] = useState<any[]>(defaultProfessionals);
+  const [marketplace, setMarketplace] = useState<Marketplace[]>(defaultMarketplace);
 
   const [selectedOrgCategory, setSelectedOrgCategory] = useState("All");
   const [activatedModules, setActivatedModules] = useState<string[]>([]);
@@ -1301,13 +1273,16 @@ export function UserDashboard() {
           <div className="space-y-6 animate-in fade-in slide-in-from-bottom-2 duration-300">
             <SectionTitle title={t("user.pro.find")} subtitle={t("user.pro.subtitle")} />
             <div className="grid gap-4 md:grid-cols-3">
-              {professionals?.filter(Boolean).map((p) => {
-                const ProIcon = getIcon(p?.Icon);
+              {professionals?.filter(Boolean).map((p, idx) => {
+                let ProIcon = User;
+                try {
+                  ProIcon = getIcon(p?.Icon) || User;
+                } catch(e) {}
                 return (
-                  <div key={p?.id || Math.random()} onClick={() => setModalData({ title: p?.name || "Professional", data: p, type: "professional" })} className="group flex flex-col rounded-3xl border border-border bg-card p-6 shadow-sm transition hover:shadow-md cursor-pointer hover:border-primary/50">
+                  <div key={p?.id || `pro-${idx}`} onClick={() => setModalData({ title: p?.name || "Professional", data: p, type: "professional" })} className="group flex flex-col rounded-3xl border border-border bg-card p-6 shadow-sm transition hover:shadow-md cursor-pointer hover:border-primary/50">
                     <div className="flex justify-between items-start mb-4">
                       <div className={cn("inline-flex h-12 w-12 items-center justify-center rounded-xl bg-gradient-to-br", p?.accent)}>
-                        <ProIcon className="h-6 w-6" />
+                        {ProIcon ? <ProIcon className="h-6 w-6" /> : <User className="h-6 w-6" />}
                       </div>
                       {p?.verified && <span className="bg-emerald-500/10 text-emerald-500 text-[10px] font-bold uppercase px-2 py-1 rounded-full flex items-center gap-1"><CheckCircle2 className="h-3 w-3" /> Verified</span>}
                     </div>
