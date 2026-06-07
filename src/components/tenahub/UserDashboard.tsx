@@ -395,11 +395,16 @@ export function UserDashboard() {
   });
 
   const [professionals, setProfessionals] = useState<any[]>(() => {
-    const stored = localStorage.getItem("tenahub_professionals");
-    if (stored) {
-      try { return JSON.parse(stored); } catch(e) {}
+    if (typeof window !== "undefined") {
+      const stored = localStorage.getItem("tenahub_professionals");
+      if (stored) {
+        try { 
+          const parsed = JSON.parse(stored);
+          if (Array.isArray(parsed)) return parsed;
+        } catch(e) {}
+      }
+      localStorage.setItem("tenahub_professionals", JSON.stringify(defaultProfessionals));
     }
-    localStorage.setItem("tenahub_professionals", JSON.stringify(defaultProfessionals));
     return defaultProfessionals;
   });
 
