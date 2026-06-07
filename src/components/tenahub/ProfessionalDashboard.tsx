@@ -100,7 +100,7 @@ export function ProfessionalDashboard() {
       } else if (lowerInput.includes("book") || lowerInput.includes("schedule") || lowerInput.includes("appointment")) {
         aiResponse = "Your appointments are automatically synced from the patient portal. You can view your full schedule under the 'Meetings' tab, where you can also launch secure video telehealth calls with a single click.";
       } else {
-        aiResponse = "Based on clinical guidelines, that's an insightful question. I've analyzed the latest medical databases and recommend reviewing the patient's full metabolic panel before adjusting the dosage. Let me know if you'd like me to pull up those specific lab results.";
+        aiResponse = `Regarding "${userMsg}", I've analyzed the latest clinical guidelines and medical databases. I recommend reviewing the patient's full metabolic panel and recent history before adjusting the treatment plan. Let me know if you'd like me to pull up those specific lab results or schedule a follow-up.`;
       }
 
       setMessages((prev: ChatMessage[]) => {
