@@ -91,9 +91,11 @@ export function ProfessionalDashboard() {
 
     setTimeout(() => {
       let aiResponse = "";
-      const lowerInput = userMsg.toLowerCase();
+      const lowerInput = userMsg.toLowerCase().trim();
       
-      if (lowerInput.includes("platform") || lowerInput.includes("tenahub") || lowerInput.includes("tenagulecha") || lowerInput.includes("about")) {
+      if (lowerInput === "hi" || lowerInput === "hello" || lowerInput === "hey" || lowerInput.includes("good morning") || lowerInput.includes("good afternoon")) {
+        aiResponse = "Hello good afternoon Dr. Selamawit! What can I help you with? I can answer a limited number of things, such as:\n• Information about the TenaGulecha platform\n• Viewing patient health records\n• Scheduling telehealth appointments\n\n*Please remember to always consult with a licensed doctor for serious medical advice.*";
+      } else if (lowerInput.includes("platform") || lowerInput.includes("tenahub") || lowerInput.includes("tenagulecha") || lowerInput.includes("about")) {
         aiResponse = "TenaGulecha is East Africa's first Health Super App! We provide a unified ecosystem that connects patients with professionals, allows organizations to list their clinics and labs, and offers a marketplace for specialized wellness mini-apps. You can use this dashboard to manage your appointments, view patient health data synced from wearables, and conduct telehealth sessions.";
       } else if (lowerInput.includes("patient") || lowerInput.includes("record") || lowerInput.includes("history")) {
         aiResponse = "To view a patient's health record, simply navigate to the 'Dashboard' tab and click on any patient in your Patient Roster. This will open a detailed view of their medical history, recent lab results, and real-time biometric data synced from their connected modules.";
@@ -449,7 +451,7 @@ export function ProfessionalDashboard() {
                     {msg.role === "user" ? <User className="h-4 w-4" /> : <Bot className="h-4 w-4" />}
                   </div>
                   <div className={cn(
-                    "rounded-2xl px-4 py-3 text-sm max-w-[80%] leading-relaxed",
+                    "rounded-2xl px-4 py-3 text-sm max-w-[80%] leading-relaxed whitespace-pre-wrap",
                     msg.role === "user" ? "bg-primary text-primary-foreground" : "bg-white/5 border border-white/10 text-foreground"
                   )}>
                     {msg.content}
